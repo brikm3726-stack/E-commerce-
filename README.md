@@ -32,9 +32,9 @@ Le catalogue décrit **9 paires**, une seule par pointure :
 
 | Modèle | Coloris | Pointures |
 | --- | --- | --- |
-| STEP ONE | Blanc / Marine | 40, 41, 42 |
-| STEP ONE | Blanc intégral | 40, 41 |
-| STEP ONE | Noir / Semelle blanche | 39, 40, 41, 42 |
+| McQUENNE | Blanc / Marine | 40, 41, 42 |
+| McQUENNE | Blanc intégral | 40, 41 |
+| McQUENNE | Noir / Semelle blanche | 39, 40, 41, 42 |
 
 Le site tient compte de ce stock unitaire partout : la quantité est bornée à ce
 qui reste, les pointures épuisées sont barrées et non sélectionnables, et les
@@ -79,8 +79,13 @@ recherche, les nouveautés et le sitemap.
 | Wilayas et communes | `src/data/wilayas.ts` |
 | Pages d’aide (livraison, retours, FAQ…) | `src/data/help.ts` |
 | Couleurs, typo, rayons, animations | `src/app/globals.css` |
+| Date de fin de la promotion (compte à rebours) | `src/data/products.ts` → `PROMO_ENDS_AT` |
 
-Les prix sont en dinars, affichés via `formatPrice()` (`7 900 DA`).
+Les prix sont en dinars, affichés via `formatPrice()`. Prix actuel : `1 800 DA`
+(barré à `3 900 DA`), en promotion jusqu'à la date fixée dans `PROMO_ENDS_AT`.
+Passé cette date, le bandeau de compte à rebours disparaît de lui-même sur la
+fiche produit — pensez à repousser la date ou à retirer `oldPrice` si la
+promotion doit continuer.
 
 ---
 
@@ -134,9 +139,12 @@ L’architecture est déjà découpée pour ça :
 - 51 chargements de pages (mobile 375 px, tablette 820 px, desktop 1440 px) :
   aucune erreur console, aucune requête en échec, aucun débordement horizontal,
   aucune image cassée, un `<h1>` par page.
-- Parcours d’achat complet automatisé : recherche, ajout rapide, filtres,
-  garde-fous de pointure, panier, validation du formulaire, frais de livraison,
+- Parcours d’achat complet automatisé : recherche, filtres, garde-fous de
+  pointure, achat direct, validation du formulaire, frais de livraison,
   confirmation, favoris — 19 vérifications, toutes passantes.
+- Un seul chemin d’achat : le bouton **Acheter maintenant** (mis en avant,
+  animé) ajoute au panier et envoie directement au checkout. Il n’y a plus de
+  bouton « Ajouter au panier » séparé, sur aucune page.
 - Les URLs inconnues renvoient un vrai 404 HTTP (pas un 404 servi en 200).
 - Sans JavaScript, le contenu reste visible (les apparitions au défilement ne
   masquent rien tant que le script n’a pas pris la main).
