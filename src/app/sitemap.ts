@@ -3,6 +3,9 @@ import { getAllProducts } from "@/lib/catalog";
 import { HELP_TOPICS } from "@/data/help";
 import { SITE } from "@/data/site";
 
+/** requis par `output: "export"` : ces routes de metadonnees sont figees au build. */
+export const dynamic = "force-static";
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
