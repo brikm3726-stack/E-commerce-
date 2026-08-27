@@ -9,7 +9,7 @@ export const SITE = {
   url: "https://ecomdz.dz",
   locale: "fr_DZ",
   currency: "DA",
-  phone: "0555 00 00 00",
+  phone: "0792 77 93 20",
   email: "contact@ecomdz.dz",
   city: "Alger, Algérie",
   social: {
@@ -17,8 +17,9 @@ export const SITE = {
     tiktok: "https://tiktok.com/",
     facebook: "https://facebook.com/",
   },
-  /** WhatsApp au format international, sans + ni espaces */
-  whatsapp: "213555000000",
+  /** WhatsApp au format international, sans + ni espaces.
+   *  0792 77 93 20 → on retire le 0 initial et on préfixe par 213. */
+  whatsapp: "213792779320",
 } as const;
 
 export const SHIPPING = {
