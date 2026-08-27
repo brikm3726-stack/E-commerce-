@@ -35,6 +35,8 @@
     "Segoe UI", Roboto, sans-serif;
   --font-display: var(--font-archivo), var(--font-inter), ui-sans-serif,
     system-ui, sans-serif;
+  /* page d'atterrissage arabe (/offre) */
+  --font-arabic: var(--font-cairo), "Segoe UI", Tahoma, sans-serif;
 
   /* --- rayons : coins légèrement arrondis ---------------------------- */
   --radius-xs: 6px;

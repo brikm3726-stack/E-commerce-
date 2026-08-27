@@ -1,9 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo, Inter } from "next/font/google";
+import { Archivo, Cairo, Inter } from "next/font/google";
 import { StoreProvider } from "@/context/StoreProvider";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { MobileMenu } from "@/components/layout/MobileMenu";
+import { SiteChrome } from "@/components/layout/SiteChrome";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { SearchOverlay } from "@/components/search/SearchOverlay";
 import { Toaster } from "@/components/ui/Toaster";
@@ -20,6 +21,14 @@ const archivo = Archivo({
   subsets: ["latin"],
   variable: "--font-archivo",
   weight: ["600", "700", "800"],
+  display: "swap",
+});
+
+/** Arabe : uniquement pour la page d'atterrissage /offre. */
+const cairo = Cairo({
+  subsets: ["arabic", "latin"],
+  variable: "--font-cairo",
+  weight: ["400", "600", "700", "900"],
   display: "swap",
 });
 
@@ -103,7 +112,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     // `data-scroll-behavior` : requis par Next 15 quand html a scroll-behavior.
     <html
       lang="fr"
-      className={`${inter.variable} ${archivo.variable}`}
+      className={`${inter.variable} ${archivo.variable} ${cairo.variable}`}
       data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
@@ -123,25 +132,30 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
 
         <StoreProvider>
-          <a
-            href="#contenu"
-            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4
-              focus:z-[100] focus:rounded-md focus:bg-accent focus:px-4 focus:py-2.5
-              focus:text-sm focus:font-semibold focus:text-[#1b1710]"
+          <SiteChrome
+            skipLink={
+              <a
+                href="#contenu"
+                className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4
+                  focus:z-[100] focus:rounded-md focus:bg-accent focus:px-4 focus:py-2.5
+                  focus:text-sm focus:font-semibold focus:text-[#1b1710]"
+              >
+                Aller au contenu
+              </a>
+            }
+            header={
+              <>
+                <Navbar />
+                <MobileMenu />
+                <SearchOverlay />
+                <CartDrawer />
+              </>
+            }
+            footer={<Footer />}
           >
-            Aller au contenu
-          </a>
-
-          <Navbar />
-          <MobileMenu />
-          <SearchOverlay />
-          <CartDrawer />
-
-          <main id="contenu" className="pt-16 md:pt-18">
             {children}
-          </main>
+          </SiteChrome>
 
-          <Footer />
           <Toaster />
         </StoreProvider>
       </body>
