@@ -22,6 +22,21 @@ export const SITE = {
   whatsapp: "213792779320",
 } as const;
 
+/**
+ * Clé Web3Forms — c'est elle qui fait arriver les commandes dans la boîte mail.
+ *
+ * À récupérer gratuitement sur https://web3forms.com en saisissant l'adresse
+ * e-mail de réception : la clé arrive aussitôt, sans e-mail d'activation, et
+ * l'adresse n'apparaît jamais dans le code. 250 envois par mois.
+ *
+ * Cette clé est PUBLIQUE par conception (le navigateur du client s'en sert),
+ * elle n'a donc pas à être cachée dans un secret de dépôt.
+ *
+ * Tant qu'elle est vide, aucune commande n'est envoyée : le client voit sa
+ * confirmation, mais rien n'arrive dans la boîte mail.
+ */
+export const WEB3FORMS_KEY = "";
+
 export const SHIPPING = {
   /** livraison à domicile */
   domicile: 600,

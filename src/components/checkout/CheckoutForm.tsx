@@ -8,6 +8,7 @@ import { ArrowRight, Building2, Home, Loader2, Lock, ShoppingBag } from "lucide-
 import { useStore } from "@/context/StoreProvider";
 import { communesOf, WILAYAS } from "@/data/wilayas";
 import { formatPrice, isValidPhone, normalizePhone } from "@/lib/format";
+import { notifyOrder } from "@/lib/notify";
 import { PAYMENT_METHODS, submitOrder } from "@/lib/orders";
 import { SHIPPING } from "@/data/site";
 import type { DeliveryMode, OrderCustomer, PaymentMethod } from "@/lib/types";
@@ -87,6 +88,10 @@ export function CheckoutForm() {
         subtotal,
         shipping,
       });
+      // L'e-mail part en arrière-plan : `keepalive` fait survivre la requête
+      // au changement de page qui suit immédiatement.
+      void notifyOrder(order, "Site");
+
       saveOrder(order);
       clearCart();
       router.push("/commande/confirmation");

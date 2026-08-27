@@ -15,6 +15,7 @@ import {
 import { WILAYAS } from "@/data/wilayas";
 import { SHIPPING, SITE } from "@/data/site";
 import { isValidPhone, normalizePhone, orderReference } from "@/lib/format";
+import { notifyOrder, type NotifyResult } from "@/lib/notify";
 import type { Order, Product } from "@/lib/types";
 
 /**
@@ -105,6 +106,8 @@ export function OrderLanding({ products }: { products: Product[] }) {
   const [errors, setErrors] = useState<FormErrors>({});
   const [sending, setSending] = useState(false);
   const [order, setOrder] = useState<Order | null>(null);
+  /** `null` tant que l'envoi de l'e-mail est en cours. */
+  const [notified, setNotified] = useState<NotifyResult | null>(null);
 
   const product = products.find((p) => p.slug === slug) ?? products[0];
   const communes = useMemo(
@@ -190,8 +193,13 @@ export function OrderLanding({ products }: { products: Product[] }) {
       total,
     };
 
-    // laisse le bouton afficher son état de chargement
-    await new Promise((r) => setTimeout(r, 600));
+    // L'e-mail part en arrière-plan : on n'attend PAS le réseau pour afficher
+    // la confirmation. Faire patienter quelqu'un devant un écran figé, sur un
+    // tunnel Facebook Ads, c'est la commande perdue.
+    void notifyOrder(built, "Page pub arabe").then(setNotified);
+
+    // court délai, juste pour que le bouton montre son état de chargement
+    await new Promise((r) => setTimeout(r, 500));
     setSending(false);
     setOrder(built);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -255,6 +263,16 @@ export function OrderLanding({ products }: { products: Product[] }) {
             </div>
           </div>
 
+          {/* Si l'e-mail n'est pas parti, WhatsApp devient le seul chemin
+              jusqu'à nous : on le dit clairement au lieu de laisser croire
+              que la commande est bien arrivée. */}
+          {notified === "failed" && (
+            <p className="mt-6 rounded-2xl border border-accent-line bg-accent-soft p-3.5 text-sm font-bold">
+              الأنترنت تقطع أثناء الإرسال. من فضلك أكد طلبك على واتساب باش ما
+              تروحش الطلبية.
+            </p>
+          )}
+
           <a
             href={whatsappLink(order)}
             target="_blank"
@@ -267,7 +285,9 @@ export function OrderLanding({ products }: { products: Product[] }) {
           </a>
 
           <p className="mt-4 text-xs text-fg-3">
-            تأكيد الطلب على واتساب يسرّع الإرسال، لكنه غير إجباري.
+            {notified === "failed"
+              ? "الطلبية توصلنا كي تبعثها على واتساب."
+              : "تأكيد الطلب على واتساب يسرّع الإرسال، لكنه غير إجباري."}
           </p>
         </div>
       </div>
