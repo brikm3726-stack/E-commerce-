@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "images": "node tools/prepare-images.js"
+    "images": "node tools/prepare-images.js",
+    "wilayas": "node tools/build-wilayas.js"
   },
   "dependencies": {
     "lucide-react": "^0.475.0",

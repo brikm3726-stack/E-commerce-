@@ -30,17 +30,13 @@ export default function AboutPage() {
         {/* --------------------------------------------------------- récit */}
         <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
           <Reveal>
-            <div className="surface relative aspect-4/5 overflow-hidden rounded-xl">
+            <div className="relative aspect-4/5 overflow-hidden rounded-xl border border-line">
               <Image
-                src="/products/step-one-navy-3.webp"
-                alt="La sneaker McQUENNE portée, coloris Blanc / Marine"
+                src="/products/step-one-navy-2.webp"
+                alt="La sneaker McQUENNE, coloris Blanc / Marine, vue trois quarts"
                 fill
                 sizes="(max-width: 1024px) 92vw, 46vw"
                 className="object-cover"
-              />
-              <div
-                aria-hidden="true"
-                className="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent"
               />
             </div>
           </Reveal>
