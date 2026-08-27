@@ -35,7 +35,7 @@ export const SITE = {
  * Tant qu'elle est vide, aucune commande n'est envoyée : le client voit sa
  * confirmation, mais rien n'arrive dans la boîte mail.
  */
-export const WEB3FORMS_KEY = "";
+export const WEB3FORMS_KEY = "2d63f702-d3aa-484b-8699-575c241c7120";
 
 export const SHIPPING = {
   /** livraison à domicile */
