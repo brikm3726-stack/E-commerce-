@@ -35,15 +35,16 @@ export function MobileMenu() {
           flex-col border-r border-line"
       >
         <div className="flex h-16 items-center justify-between border-b border-line px-5">
-          <span className="font-display text-lg font-extrabold tracking-[-0.03em] [word-spacing:0.14em] uppercase">
-            Step Up
+          <span className="font-display text-lg font-extrabold tracking-[-0.03em]">
+            <span className="text-fg">Ecom</span>
+            <span className="text-accent-2">DZ</span>
           </span>
           <button
             type="button"
             onClick={() => setMenuOpen(false)}
             aria-label="Fermer le menu"
             className="-mr-2 grid size-10 place-items-center rounded-md text-fg-2
-              transition-colors hover:bg-white/5 hover:text-fg"
+              transition-colors hover:bg-black/[0.05] hover:text-fg"
           >
             <X size={20} />
           </button>

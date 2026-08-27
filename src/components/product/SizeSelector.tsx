@@ -67,9 +67,9 @@ export function SizeSelector({
               className={`relative h-12 min-w-12 rounded-md border px-3 text-sm font-semibold
                 transition-all duration-300 ${
                   selected
-                    ? "border-accent bg-accent-soft text-accent-2 shadow-[0_0_0_3px_rgba(22,119,255,0.12)]"
+                    ? "border-accent bg-accent-soft text-accent-2 shadow-[0_0_0_3px_rgba(245,179,1,0.12)]"
                     : available
-                      ? "border-line-strong text-fg hover:border-accent-line hover:bg-white/4"
+                      ? "border-line-strong text-fg hover:border-accent-line hover:bg-black/[0.045]"
                       : "cursor-not-allowed border-line text-fg-3"
                 }`}
             >

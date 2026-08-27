@@ -30,7 +30,7 @@ export function Rating({
             key={i}
             size={px}
             strokeWidth={0}
-            className={i < rounded ? "fill-accent-2" : "fill-white/14"}
+            className={i < rounded ? "fill-accent-2" : "fill-black/15"}
           />
         ))}
       </div>

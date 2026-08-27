@@ -9,7 +9,7 @@ import { getAllProducts, totalStock } from "@/lib/catalog";
 export const metadata: Metadata = {
   title: "À propos",
   description:
-    "STEP UP, boutique algérienne de sneakers et streetwear : une sélection courte, un stock réel, un paiement à la livraison.",
+    "EcomDZ, boutique algérienne de sneakers et streetwear : une sélection courte, un stock réel, un paiement à la livraison.",
   alternates: { canonical: "/a-propos" },
 };
 
@@ -22,7 +22,7 @@ export default function AboutPage() {
       <PageHeader
         eyebrow="La marque"
         title="À propos"
-        description="STEP UP est né d’un constat simple : en Algérie, acheter une paire en ligne relève trop souvent du pari."
+        description="EcomDZ est né d’un constat simple : en Algérie, acheter une paire en ligne relève trop souvent du pari."
         crumbs={[{ label: "À propos" }]}
       />
 
@@ -32,8 +32,8 @@ export default function AboutPage() {
           <Reveal>
             <div className="surface relative aspect-4/5 overflow-hidden rounded-xl">
               <Image
-                src="/products/step-one-navy-detail-2.webp"
-                alt="Détail du laçage et de la semelle de la sneaker McQUENNE"
+                src="/products/step-one-navy-3.webp"
+                alt="La sneaker McQUENNE portée, coloris Blanc / Marine"
                 fill
                 sizes="(max-width: 1024px) 92vw, 46vw"
                 className="object-cover"

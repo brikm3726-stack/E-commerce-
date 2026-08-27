@@ -130,7 +130,7 @@ export function CollectionView({ products, columns = 4 }: CollectionViewProps) {
             <SlidersHorizontal size={15} />
             Filtres
             {activeCount > 0 && (
-              <span className="grid size-5 place-items-center rounded-full bg-accent text-[0.625rem] font-bold text-white">
+              <span className="grid size-5 place-items-center rounded-full bg-accent text-[0.625rem] font-bold text-[#1b1710]">
                 {activeCount}
               </span>
             )}
@@ -221,7 +221,7 @@ export function CollectionView({ products, columns = 4 }: CollectionViewProps) {
                         }`}
                     >
                       <span
-                        className="size-3.5 rounded-full border border-white/20"
+                        className="size-3.5 rounded-full border border-black/15"
                         style={{
                           background: color.accentHex
                             ? `linear-gradient(135deg, ${color.hex} 55%, ${color.accentHex} 55%)`

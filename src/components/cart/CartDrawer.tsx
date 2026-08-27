@@ -62,7 +62,7 @@ export function CartDrawer() {
             onClick={() => setCartOpen(false)}
             aria-label="Fermer le panier"
             className="-mr-2 grid size-10 place-items-center rounded-md text-fg-2
-              transition-colors hover:bg-white/5 hover:text-fg"
+              transition-colors hover:bg-black/[0.05] hover:text-fg"
           >
             <X size={20} />
           </button>
@@ -71,7 +71,7 @@ export function CartDrawer() {
         {cart.length === 0 ? (
           /* ---------------------------------------------------- vide */
           <div className="flex flex-1 flex-col items-center justify-center px-8 text-center">
-            <div className="mb-5 grid size-16 place-items-center rounded-full border border-line bg-white/3">
+            <div className="mb-5 grid size-16 place-items-center rounded-full border border-line bg-black/[0.035]">
               <ShoppingBag size={24} className="text-fg-3" />
             </div>
             <p className="mb-2 font-display text-lg font-bold uppercase">
@@ -100,7 +100,7 @@ export function CartDrawer() {
                   Livraison offerte débloquée
                 </p>
               )}
-              <div className="h-1 overflow-hidden rounded-full bg-white/8">
+              <div className="h-1 overflow-hidden rounded-full bg-black/10">
                 <div
                   className="h-full rounded-full bg-gradient-to-r from-accent to-accent-2
                     transition-[width] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"

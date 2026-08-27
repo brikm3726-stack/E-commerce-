@@ -16,7 +16,7 @@ const ACCESSORY_TYPES = [
 export const metadata: Metadata = {
   title: "Accessoires",
   description:
-    "Chaussettes, casquettes, sacs et produits d’entretien STEP UP. Paiement à la livraison partout en Algérie.",
+    "Chaussettes, casquettes, sacs et produits d’entretien EcomDZ. Paiement à la livraison partout en Algérie.",
   alternates: { canonical: "/accessoires" },
 };
 

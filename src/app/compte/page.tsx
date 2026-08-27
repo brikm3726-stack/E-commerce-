@@ -4,7 +4,7 @@ import { AccountContent } from "@/components/account/AccountContent";
 
 export const metadata: Metadata = {
   title: "Mon compte",
-  description: "Suivi de commande, favoris et panier STEP UP.",
+  description: "Suivi de commande, favoris et panier EcomDZ.",
   robots: { index: false, follow: true },
   alternates: { canonical: "/compte" },
 };

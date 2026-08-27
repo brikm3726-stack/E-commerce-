@@ -110,7 +110,7 @@ export function CheckoutForm() {
   if (cart.length === 0) {
     return (
       <div className="surface rounded-xl px-6 py-20 text-center">
-        <div className="mx-auto mb-6 grid size-16 place-items-center rounded-full border border-line bg-white/3">
+        <div className="mx-auto mb-6 grid size-16 place-items-center rounded-full border border-line bg-black/[0.035]">
           <ShoppingBag size={24} className="text-fg-3" />
         </div>
         <h2 className="display mb-3 text-2xl">Aucun article à commander</h2>
@@ -253,7 +253,7 @@ export function CheckoutForm() {
                   transition-all duration-300 ${
                     delivery === option.id
                       ? "border-accent bg-accent-soft"
-                      : "border-line hover:border-line-strong hover:bg-white/3"
+                      : "border-line hover:border-line-strong hover:bg-black/[0.035]"
                   }`}
               >
                 <option.icon
@@ -388,7 +388,7 @@ export function CheckoutForm() {
                     payment === method.id
                       ? "border-accent bg-accent-soft"
                       : method.available
-                        ? "border-line hover:border-line-strong hover:bg-white/3"
+                        ? "border-line hover:border-line-strong hover:bg-black/[0.035]"
                         : "cursor-not-allowed border-line opacity-45"
                   }`}
               >
@@ -435,7 +435,7 @@ export function CheckoutForm() {
                   />
                   <span
                     className="absolute -right-1 -top-1 grid size-5 place-items-center
-                      rounded-full bg-accent text-[0.625rem] font-bold text-white"
+                      rounded-full bg-accent text-[0.625rem] font-bold text-[#1b1710]"
                   >
                     {line.quantity}
                   </span>

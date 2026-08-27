@@ -14,7 +14,7 @@ import { formatDate } from "@/lib/format";
 export const metadata: Metadata = {
   title: "Nouveautés — New Drop",
   description:
-    "Les dernières arrivées STEP UP : sneakers et pièces streetwear tout juste ajoutées au catalogue.",
+    "Les dernières arrivées EcomDZ : sneakers et pièces streetwear tout juste ajoutées au catalogue.",
   alternates: { canonical: "/nouveautes" },
 };
 
@@ -48,7 +48,7 @@ export default function NouveautesPage() {
                   className="absolute inset-0"
                   style={{
                     background:
-                      "radial-gradient(circle at 50% 45%, rgba(22,119,255,0.22), transparent 62%)",
+                      "radial-gradient(circle at 50% 45%, rgba(245,179,1,0.22), transparent 62%)",
                   }}
                 />
                 <Image

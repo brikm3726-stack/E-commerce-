@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "images": "python tools/prepare-images.py"
+    "images": "node tools/prepare-images.js"
   },
   "dependencies": {
     "lucide-react": "^0.475.0",

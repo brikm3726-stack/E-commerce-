@@ -26,15 +26,15 @@ const archivo = Archivo({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
-    default: `${SITE.name} — Sneakers & streetwear premium en Algérie`,
+    default: `${SITE.name} — Boutique e-commerce moderne en Algérie`,
     template: `%s — ${SITE.name}`,
   },
   description: SITE.description,
   keywords: [
-    "sneakers Algérie",
-    "baskets homme Algérie",
-    "streetwear DZ",
-    "chaussures premium Alger",
+    "boutique en ligne Algérie",
+    "e-commerce DZ",
+    "achat en ligne Algérie",
+    "produits tendance Alger",
     "paiement à la livraison",
   ],
   authors: [{ name: SITE.name }],
@@ -43,22 +43,22 @@ export const metadata: Metadata = {
     locale: SITE.locale,
     url: SITE.url,
     siteName: SITE.name,
-    title: `${SITE.name} — Sneakers & streetwear premium`,
+    title: `${SITE.name} — Le shopping qui vous ressemble`,
     description: SITE.description,
     images: [
       {
-        url: "/products/step-one-navy-og.webp",
+        url: "/hero-ecomdz.webp",
         width: 1200,
-        height: 630,
-        alt: "Sneaker McQUENNE par STEP UP",
+        height: 1146,
+        alt: "Produits EcomDZ dans un univers jaune",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: `${SITE.name} — Sneakers & streetwear premium`,
+    title: `${SITE.name} — Le shopping qui vous ressemble`,
     description: SITE.description,
-    images: ["/products/step-one-navy-og.webp"],
+    images: ["/hero-ecomdz.webp"],
   },
   robots: {
     index: true,
@@ -69,8 +69,8 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#02040A",
-  colorScheme: "dark",
+  themeColor: "#F5B301",
+  colorScheme: "light",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -97,7 +97,16 @@ const organizationSchema = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" className={`${inter.variable} ${archivo.variable}`}>
+    // `suppressHydrationWarning` : le script ci-dessous ajoute la classe « js »
+    // sur <html> avant que React n'hydrate. Sans cette option, React signale
+    // l'écart entre le HTML du serveur et celui du navigateur à chaque page.
+    // `data-scroll-behavior` : requis par Next 15 quand html a scroll-behavior.
+    <html
+      lang="fr"
+      className={`${inter.variable} ${archivo.variable}`}
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+    >
       <head>
         {/* Pose « js » sur <html> avant le premier rendu : les apparitions au
             defilement ne masquent le contenu que si le script tourne. */}
@@ -118,7 +127,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             href="#contenu"
             className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4
               focus:z-[100] focus:rounded-md focus:bg-accent focus:px-4 focus:py-2.5
-              focus:text-sm focus:font-semibold focus:text-white"
+              focus:text-sm focus:font-semibold focus:text-[#1b1710]"
           >
             Aller au contenu
           </a>

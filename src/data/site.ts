@@ -2,15 +2,15 @@
  *  livraison, les coordonnées et les réseaux sociaux. */
 
 export const SITE = {
-  name: "STEP UP",
-  tagline: "L’élégance au quotidien",
+  name: "EcomDZ",
+  tagline: "Le shopping qui vous ressemble",
   description:
-    "Sneakers et streetwear premium sélectionnés en Algérie. Paiement à la livraison, 58 wilayas, échange sous 48h.",
-  url: "https://stepup.dz",
+    "EcomDZ — la boutique e-commerce moderne et algérienne. Produits tendance, nouveautés et meilleures offres, livrés partout en Algérie. Paiement à la livraison.",
+  url: "https://ecomdz.dz",
   locale: "fr_DZ",
   currency: "DA",
   phone: "0555 00 00 00",
-  email: "contact@stepup.dz",
+  email: "contact@ecomdz.dz",
   city: "Alger, Algérie",
   social: {
     instagram: "https://instagram.com/",
@@ -32,9 +32,8 @@ export const SHIPPING = {
 
 export const NAV_LINKS = [
   { label: "Accueil", href: "/" },
-  { label: "Sneakers", href: "/sneakers" },
-  { label: "Vêtements", href: "/vetements" },
-  { label: "Nouveautés", href: "/nouveautes" },
-  { label: "Collections", href: "/collections" },
+  { label: "Boutique", href: "/collections" },
+  { label: "Catégories", href: "/#categories" },
+  { label: "Promotions", href: "/#promotions" },
   { label: "À propos", href: "/a-propos" },
 ] as const;

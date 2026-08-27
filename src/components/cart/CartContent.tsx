@@ -37,7 +37,7 @@ export function CartContent() {
   if (cart.length === 0) {
     return (
       <div className="surface rounded-xl px-6 py-20 text-center">
-        <div className="mx-auto mb-6 grid size-16 place-items-center rounded-full border border-line bg-white/3">
+        <div className="mx-auto mb-6 grid size-16 place-items-center rounded-full border border-line bg-black/[0.035]">
           <ShoppingBag size={24} className="text-fg-3" />
         </div>
         <h2 className="display mb-3 text-2xl">Votre panier est vide</h2>
@@ -97,7 +97,7 @@ export function CartContent() {
                       onClick={() => removeFromCart(key)}
                       aria-label={`Retirer ${line.name} taille ${line.size}`}
                       className="shrink-0 rounded-md p-1.5 text-fg-3 transition-colors
-                        hover:bg-white/5 hover:text-[color:var(--color-danger)]"
+                        hover:bg-black/[0.05] hover:text-[color:var(--color-danger)]"
                     >
                       <Trash2 size={16} />
                     </button>
@@ -189,7 +189,7 @@ export function CartContent() {
           </dl>
 
           {remaining > 0 && (
-            <p className="mt-3 rounded-md border border-line bg-white/3 px-3 py-2.5 text-xs text-fg-2">
+            <p className="mt-3 rounded-md border border-line bg-black/[0.035] px-3 py-2.5 text-xs text-fg-2">
               Ajoutez {formatPrice(remaining)} pour bénéficier de la livraison offerte.
             </p>
           )}

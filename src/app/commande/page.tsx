@@ -5,7 +5,7 @@ import { CheckoutForm } from "@/components/checkout/CheckoutForm";
 export const metadata: Metadata = {
   title: "Commande",
   description:
-    "Finalisez votre commande STEP UP : livraison dans les 58 wilayas, paiement à la livraison.",
+    "Finalisez votre commande EcomDZ : livraison dans les 58 wilayas, paiement à la livraison.",
   robots: { index: false, follow: false },
   alternates: { canonical: "/commande" },
 };

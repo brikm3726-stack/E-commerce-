@@ -83,7 +83,7 @@ export function SearchOverlay() {
             onClick={() => setSearchOpen(false)}
             aria-label="Fermer la recherche"
             className="-mr-1.5 grid size-9 shrink-0 place-items-center rounded-md
-              text-fg-3 transition-colors hover:bg-white/5 hover:text-fg"
+              text-fg-3 transition-colors hover:bg-black/[0.05] hover:text-fg"
           >
             <X size={18} />
           </button>
@@ -101,7 +101,7 @@ export function SearchOverlay() {
                       key={suggestion}
                       type="button"
                       onClick={() => setQuery(suggestion)}
-                      className="rounded-md border border-line bg-white/3 px-3 py-2
+                      className="rounded-md border border-line bg-black/[0.035] px-3 py-2
                         text-[0.8125rem] text-fg-2 transition-all duration-300
                         hover:border-accent-line hover:bg-accent-soft hover:text-accent-2"
                     >

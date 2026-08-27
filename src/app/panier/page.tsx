@@ -4,7 +4,7 @@ import { CartContent } from "@/components/cart/CartContent";
 
 export const metadata: Metadata = {
   title: "Panier",
-  description: "Votre panier STEP UP : vérifiez vos articles avant de passer commande.",
+  description: "Votre panier EcomDZ : vérifiez vos articles avant de passer commande.",
   robots: { index: false, follow: true },
   alternates: { canonical: "/panier" },
 };

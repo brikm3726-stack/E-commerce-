@@ -178,7 +178,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
                 <span
                   key={dot.src}
                   className={`h-1 rounded-full transition-all duration-300 ${
-                    i === index ? "w-5 bg-accent-2" : "w-1 bg-white/25"
+                    i === index ? "w-5 bg-accent-2" : "w-1 bg-black/20"
                   }`}
                 />
               ))}
@@ -208,7 +208,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
               onClick={() => setFullscreen(false)}
               aria-label="Fermer le plein écran"
               className="grid size-10 place-items-center rounded-md text-fg-2
-                transition-colors hover:bg-white/5 hover:text-fg"
+                transition-colors hover:bg-black/[0.05] hover:text-fg"
             >
               <X size={20} />
             </button>

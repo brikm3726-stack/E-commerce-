@@ -76,11 +76,11 @@ export function ProductPurchase({ product }: { product: Product }) {
                   transition-all duration-300 ${
                     current
                       ? "border-accent bg-accent-soft"
-                      : "border-line hover:border-line-strong hover:bg-white/4"
+                      : "border-line hover:border-line-strong hover:bg-black/[0.045]"
                   }`}
               >
                 <span
-                  className="size-6 rounded-full border border-white/20"
+                  className="size-6 rounded-full border border-black/15"
                   style={{
                     background: color.accentHex
                       ? `linear-gradient(135deg, ${color.hex} 55%, ${color.accentHex} 55%)`

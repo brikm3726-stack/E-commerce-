@@ -32,43 +32,45 @@ export function ProductCard({ product, priority = false, index = 0 }: ProductCar
         aria-label={`${product.name} ${product.colorName}`}
       >
         {/* ---------------------------------------------------------- visuel */}
+        {/* Les photos du catalogue sont de vraies photos portées, aux fonds
+            variés : elles remplissent la carte (`object-cover`) plutôt que de
+            flotter sur une tuile. */}
         <div
-          className="surface relative aspect-4/5 overflow-hidden rounded-lg
-            transition-all duration-500 group-hover:border-line-strong
-            group-hover:shadow-[0_20px_60px_-24px_rgba(22,119,255,0.4)]"
+          className="relative aspect-4/5 overflow-hidden rounded-lg border border-line
+            bg-card-2 transition-all duration-500 group-hover:border-accent-line
+            group-hover:shadow-[0_22px_60px_-24px_rgba(245,179,1,0.5)]"
         >
-          {/* halo bleu très discret, révélé au survol */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 opacity-0
-              transition-opacity duration-700 group-hover:opacity-100"
-            style={{
-              background:
-                "radial-gradient(circle at 50% 45%, rgba(22,119,255,0.14), transparent 62%)",
-            }}
-          />
-
           <Image
             src={product.cutout.src}
             alt={product.cutout.alt}
             fill
             sizes="(max-width: 640px) 46vw, (max-width: 1024px) 30vw, 22vw"
             priority={priority}
-            className={`object-contain p-3 transition-transform duration-[900ms]
+            className={`object-cover transition-transform duration-[900ms]
               ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06]
               ${soldOut ? "opacity-45 grayscale" : ""}`}
+          />
+
+          {/* voile bas : garde les badges et le bouton lisibles sur la photo */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3
+              bg-gradient-to-t from-black/35 to-transparent opacity-0
+              transition-opacity duration-500 group-hover:opacity-100"
           />
 
           {/* badges */}
           <div className="pointer-events-none absolute inset-x-3 top-3 flex items-start justify-between gap-2">
             <div className="flex flex-col items-start gap-1.5">
-              {product.badge && <ProductBadge kind={product.badge} />}
+              {product.badge && (
+                <ProductBadge kind={product.badge} className="badge-on-photo" />
+              )}
               {lastPairs && !soldOut && (
-                <span className="badge badge-danger">
+                <span className="badge badge-danger badge-on-photo">
                   {stock === 1 ? "Dernière paire" : `Plus que ${stock}`}
                 </span>
               )}
-              {soldOut && <span className="badge">Épuisé</span>}
+              {soldOut && <span className="badge badge-on-photo">Épuisé</span>}
             </div>
 
             <div className="pointer-events-auto">

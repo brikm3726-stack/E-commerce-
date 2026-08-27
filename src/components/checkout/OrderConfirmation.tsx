@@ -70,7 +70,7 @@ export function OrderConfirmation() {
             heures pour confirmer la disponibilité et la livraison.
           </p>
 
-          <div className="mt-6 inline-flex items-center gap-3 rounded-md border border-line bg-white/3 px-4 py-2.5">
+          <div className="mt-6 inline-flex items-center gap-3 rounded-md border border-line bg-black/[0.035] px-4 py-2.5">
             <span className="text-xs text-fg-3">Référence</span>
             <span className="font-display text-sm font-bold tracking-wider">
               {order.reference}

@@ -28,7 +28,7 @@ export function WishlistContent() {
   if (products.length === 0) {
     return (
       <div className="surface rounded-xl px-6 py-20 text-center">
-        <div className="mx-auto mb-6 grid size-16 place-items-center rounded-full border border-line bg-white/3">
+        <div className="mx-auto mb-6 grid size-16 place-items-center rounded-full border border-line bg-black/[0.035]">
           <Heart size={24} className="text-fg-3" />
         </div>
         <h2 className="display mb-3 text-2xl">Aucun favori pour l’instant</h2>

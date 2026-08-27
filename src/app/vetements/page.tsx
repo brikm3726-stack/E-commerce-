@@ -8,7 +8,7 @@ import { getByCategory, getCategory } from "@/lib/catalog";
 export const metadata: Metadata = {
   title: "Vêtements",
   description:
-    "T-shirts, hoodies, sweats, pantalons, vestes et ensembles streetwear STEP UP. Livraison dans les 58 wilayas.",
+    "T-shirts, hoodies, sweats, pantalons, vestes et ensembles streetwear EcomDZ. Livraison dans les 58 wilayas.",
   alternates: { canonical: "/vetements" },
 };
 

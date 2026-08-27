@@ -23,7 +23,7 @@ export function EmptyCategory({ types, label }: EmptyCategoryProps) {
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "radial-gradient(560px 260px at 50% 0%, rgba(22,119,255,0.14), transparent 70%)",
+              "radial-gradient(560px 260px at 50% 0%, rgba(245,179,1,0.14), transparent 70%)",
           }}
         />
 
@@ -43,7 +43,7 @@ export function EmptyCategory({ types, label }: EmptyCategoryProps) {
             {types.map((type) => (
               <li
                 key={type}
-                className="rounded-md border border-line bg-white/3 px-3.5 py-2
+                className="rounded-md border border-line bg-black/[0.035] px-3.5 py-2
                   text-[0.8125rem] text-fg-2"
               >
                 {type}

@@ -45,7 +45,7 @@ export function SizeGuide({ onClose }: { onClose: () => void }) {
             onClick={onClose}
             aria-label="Fermer"
             className="-mr-2 grid size-9 place-items-center rounded-md text-fg-2
-              transition-colors hover:bg-white/5 hover:text-fg"
+              transition-colors hover:bg-black/[0.05] hover:text-fg"
           >
             <X size={18} />
           </button>

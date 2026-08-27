@@ -4,7 +4,7 @@ import { WishlistContent } from "@/components/product/WishlistContent";
 
 export const metadata: Metadata = {
   title: "Mes favoris",
-  description: "Retrouvez les pièces STEP UP que vous avez sauvegardées.",
+  description: "Retrouvez les pièces EcomDZ que vous avez sauvegardées.",
   robots: { index: false, follow: true },
   alternates: { canonical: "/favoris" },
 };

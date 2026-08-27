@@ -6,7 +6,7 @@ import { getByCategory, getCategory } from "@/lib/catalog";
 export const metadata: Metadata = {
   title: "Sneakers",
   description:
-    "Toutes les sneakers STEP UP disponibles en Algérie. Stock réel, une paire par pointure, paiement à la livraison.",
+    "Toutes les sneakers EcomDZ disponibles en Algérie. Stock réel, une paire par pointure, paiement à la livraison.",
   alternates: { canonical: "/sneakers" },
 };
 

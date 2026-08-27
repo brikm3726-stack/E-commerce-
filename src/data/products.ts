@@ -1,7 +1,7 @@
 import type { CategorySlug, Product } from "@/lib/types";
 
 /**
- * Catalogue STEP UP.
+ * Catalogue EcomDZ.
  *
  * Stock réel : 9 paires, une seule paire par pointure.
  *   McQUENNE Navy  → 40, 41, 42
@@ -23,40 +23,27 @@ const COLORS = [
   { name: "Noir / Semelle blanche", hex: "#101216", accentHex: "#F1EFEA", slug: "step-one-black" },
 ];
 
-function gallery(slug: string, alt: string) {
-  return [
-    {
-      src: `/products/${slug}-main.webp`,
-      src2x: `/products/${slug}-main@2x.webp`,
-      alt: `${alt} — vue trois quarts`,
-      width: 800,
-      height: 1001,
-    },
-    {
-      src: `/products/${slug}-detail-1.webp`,
-      src2x: `/products/${slug}-detail-1@2x.webp`,
-      alt: `${alt} — détail du contrefort et du col rembourré`,
-      width: 700,
-      height: 876,
-    },
-    {
-      src: `/products/${slug}-detail-2.webp`,
-      src2x: `/products/${slug}-detail-2@2x.webp`,
-      alt: `${alt} — détail du laçage et de la semelle surélevée`,
-      width: 700,
-      height: 876,
-    },
-  ];
+/** Tous les visuels produits sortent de `node tools/prepare-images.js`, en 4:5.
+ *  `count` = nombre de photos dans le dossier du coloris, vignette comprise :
+ *  la vignette ouvre toujours la galerie. */
+const IMG = { width: 800, height: 1000 } as const;
+
+function gallery(slug: string, alt: string, count: number) {
+  return Array.from({ length: count }, (_, i) => ({
+    src: `/products/${slug}-${i + 1}.webp`,
+    src2x: `/products/${slug}-${i + 1}@2x.webp`,
+    alt: i === 0 ? alt : `${alt} — photo ${i + 1}`,
+    ...IMG,
+  }));
 }
 
+/** Vignette du modèle : cartes produits, panier, favoris, recherche. */
 function cutout(slug: string, alt: string) {
   return {
     src: `/products/${slug}-cut.webp`,
     src2x: `/products/${slug}-cut@2x.webp`,
     alt,
-    cutout: true,
-    width: 900,
-    height: 860,
+    ...IMG,
   };
 }
 
@@ -81,10 +68,10 @@ export const PRODUCTS: Product[] = [
     slug: "step-one-navy",
     category: "sneakers",
     type: "Sneakers basses",
-    brand: "STEP UP",
+    brand: "EcomDZ",
     price: 1800,
     oldPrice: 3900,
-    images: gallery("step-one-navy", "McQUENNE Blanc et Marine"),
+    images: gallery("step-one-navy", "McQUENNE Blanc et Marine", 7),
     cutout: cutout("step-one-navy", "Sneaker McQUENNE blanche à contrefort bleu marine"),
     colors: COLORS,
     colorName: "Blanc / Marine",
@@ -111,10 +98,10 @@ export const PRODUCTS: Product[] = [
     slug: "step-one-white",
     category: "sneakers",
     type: "Sneakers basses",
-    brand: "STEP UP",
+    brand: "EcomDZ",
     price: 1800,
     oldPrice: 3900,
-    images: gallery("step-one-white", "McQUENNE Blanc intégral"),
+    images: gallery("step-one-white", "McQUENNE Blanc intégral", 5),
     cutout: cutout("step-one-white", "Sneaker McQUENNE entièrement blanche"),
     colors: COLORS,
     colorName: "Blanc intégral",
@@ -140,10 +127,10 @@ export const PRODUCTS: Product[] = [
     slug: "step-one-black",
     category: "sneakers",
     type: "Sneakers basses",
-    brand: "STEP UP",
+    brand: "EcomDZ",
     price: 1800,
     oldPrice: 3900,
-    images: gallery("step-one-black", "McQUENNE Noir et semelle blanche"),
+    images: gallery("step-one-black", "McQUENNE Noir et semelle blanche", 4),
     cutout: cutout("step-one-black", "Sneaker McQUENNE noire à semelle blanche"),
     colors: COLORS,
     colorName: "Noir / Semelle blanche",
@@ -186,8 +173,7 @@ export const CATEGORIES: CategoryInfo[] = [
     description:
       "Des silhouettes basses, sobres et bien construites. Chaque paire est sélectionnée à l’unité, " +
       "essayée et contrôlée avant d’être mise en ligne.",
-    image: "/products/step-one-navy-cut.webp",
-    image2x: "/products/step-one-navy-cut@2x.webp",
+    image: "/mc-12.webp",
   },
   {
     slug: "vetements",

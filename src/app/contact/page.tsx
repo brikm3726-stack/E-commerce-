@@ -8,7 +8,7 @@ import { SITE } from "@/data/site";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Contactez STEP UP : WhatsApp, téléphone ou e-mail. Réponse rapide pendant les heures d’ouverture.",
+    "Contactez EcomDZ : WhatsApp, téléphone ou e-mail. Réponse rapide pendant les heures d’ouverture.",
   alternates: { canonical: "/contact" },
 };
 

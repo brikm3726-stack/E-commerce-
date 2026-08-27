@@ -1,118 +1,100 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { PageHeader } from "@/components/collection/PageHeader";
+import { ProductGrid } from "@/components/product/ProductGrid";
 import { Reveal } from "@/components/ui/Reveal";
-import { CATEGORIES } from "@/data/products";
-import { getAllProducts, getByCategory, getNewArrivals } from "@/lib/catalog";
+import { getByCategory } from "@/lib/catalog";
+import { withBasePath } from "@/lib/base-path";
 
 export const metadata: Metadata = {
-  title: "Collections",
+  title: "Boutique",
   description:
-    "Toutes les collections STEP UP : sneakers, vêtements, accessoires et le dernier drop en date.",
+    "La boutique EcomDZ : les sneakers McQUENNE disponibles en Algérie. Stock réel, paiement à la livraison.",
   alternates: { canonical: "/collections" },
 };
 
+/** Boutique : seuls les produits réellement disponibles sont affichés.
+ *  Aujourd'hui, les trois coloris McQUENNE. */
 export default function CollectionsPage() {
-  const all = getAllProducts();
-  const newest = getNewArrivals(1)[0];
-
-  const collections = [
-    {
-      href: "/nouveautes",
-      label: "New Drop",
-      description:
-        "Les dernières pièces reçues et contrôlées, mises en ligne au fil des arrivages.",
-      image: newest?.cutout.src ?? "/products/step-one-black-cut.webp",
-      count: `${all.length} pièces`,
-      featured: true,
-    },
-    ...CATEGORIES.map((category) => {
-      const count = getByCategory(category.slug).length;
-      return {
-        href: category.href,
-        label: category.title,
-        description: category.description,
-        image: category.image,
-        count: count > 0 ? `${count} modèle${count > 1 ? "s" : ""}` : null,
-        featured: false,
-      };
-    }),
-  ];
+  const sneakers = getByCategory("sneakers");
 
   return (
     <>
       <PageHeader
-        eyebrow="Univers"
-        title="Collections"
-        description="Quatre entrées pour parcourir la boutique : le dernier drop, les sneakers, les vêtements et les accessoires."
-        crumbs={[{ label: "Collections" }]}
+        eyebrow="Boutique"
+        title="Nos produits"
+        description="Ce qui est en ligne est en stock. Aujourd’hui, la sneaker McQUENNE en trois coloris."
+        crumbs={[{ label: "Boutique" }]}
+        meta={`${sneakers.length} modèle${sneakers.length > 1 ? "s" : ""} disponible${
+          sneakers.length > 1 ? "s" : ""
+        }`}
       />
 
       <div className="container-page py-10 md:py-14">
-        <div className="grid gap-4 md:grid-cols-2">
-          {collections.map((collection, index) => (
-            <Reveal
-              key={collection.href}
-              delay={index * 80}
-              className={collection.featured ? "md:col-span-2" : ""}
-            >
-              <Link
-                href={collection.href}
-                className={`surface group relative flex overflow-hidden rounded-lg
-                  transition-all duration-500 hover:border-line-strong
-                  hover:shadow-[0_24px_70px_-30px_rgba(22,119,255,0.45)] ${
-                    collection.featured
-                      ? "min-h-[20rem] items-end md:min-h-[24rem]"
-                      : "min-h-[17rem] items-end"
-                  }`}
-              >
-                <div className="absolute inset-0">
-                  <Image
-                    src={collection.image}
-                    alt=""
-                    fill
-                    sizes={collection.featured ? "92vw" : "(max-width: 768px) 92vw, 46vw"}
-                    className="object-contain p-8 opacity-90 transition-transform
-                      duration-[1100ms] ease-[cubic-bezier(0.22,1,0.36,1)]
-                      group-hover:scale-108"
-                  />
-                  <div
-                    aria-hidden="true"
-                    className="absolute inset-0 bg-gradient-to-t from-ink via-ink/60 to-transparent"
-                  />
-                </div>
+        {/* ============================================== bannière McQUENNE */}
+        <Reveal>
+          <div
+            className="relative overflow-hidden rounded-[1.5rem] border border-line bg-white
+              shadow-[0_20px_60px_-34px_rgba(26,20,6,0.3)]"
+          >
+            <div className="relative aspect-4/3 w-full sm:aspect-video">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={withBasePath("/mc-12.webp")}
+                alt="Sneaker McQUENNE blanche à semelle surélevée, sur fond studio clair"
+                width={1536}
+                height={864}
+                fetchPriority="high"
+                decoding="async"
+                className="absolute inset-0 size-full object-cover"
+              />
+              <div
+                aria-hidden="true"
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "linear-gradient(90deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.72) 36%, rgba(255,255,255,0) 64%)",
+                }}
+              />
 
-                <div className="relative w-full p-7 md:p-9">
-                  {collection.count && <span className="badge mb-3">{collection.count}</span>}
-                  <h2
-                    className={`display ${
-                      collection.featured
-                        ? "text-[clamp(2.2rem,6vw,3.4rem)]"
-                        : "text-[clamp(1.7rem,4vw,2.2rem)]"
-                    }`}
-                  >
-                    {collection.label}
-                  </h2>
-                  <p className="mt-2.5 max-w-md text-[0.8125rem] leading-relaxed text-fg-2">
-                    {collection.description}
-                  </p>
-                  <span
-                    className="mt-4 inline-flex items-center gap-2 text-[0.6875rem]
-                      font-semibold tracking-[0.12em] uppercase text-accent-2"
-                  >
-                    Explorer
-                    <ArrowRight
-                      size={13}
-                      className="transition-transform duration-300 group-hover:translate-x-1.5"
-                    />
-                  </span>
-                </div>
-              </Link>
-            </Reveal>
-          ))}
-        </div>
+              <div className="absolute inset-y-0 left-0 flex max-w-[66%] flex-col justify-center p-6 sm:max-w-[52%] sm:p-10 lg:p-14">
+                <p className="eyebrow mb-3">La sélection du moment</p>
+
+                <h2 className="display text-[clamp(1.8rem,4.4vw,3.2rem)]">McQUENNE</h2>
+
+                <p className="mt-3 max-w-sm text-[0.8125rem] leading-relaxed text-fg-2 sm:text-sm">
+                  Une silhouette basse à semelle surélevée, montée en cuir lisse.
+                  Trois coloris, stock réel, une paire par pointure.
+                </p>
+
+                <Link
+                  href="/sneakers"
+                  className="btn btn-primary mt-6 w-fit"
+                  aria-label="Explorer les sneakers McQUENNE"
+                >
+                  Explorer
+                  <ArrowRight size={15} />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+
+        {/* =================================================== les 3 coloris */}
+        <section className="mt-14 md:mt-20" aria-labelledby="modeles-titre">
+          <Reveal>
+            <h2 id="modeles-titre" className="display text-[clamp(1.5rem,3.4vw,2rem)]">
+              Les {sneakers.length} modèles
+            </h2>
+            <p className="mt-2.5 max-w-lg text-sm leading-relaxed text-fg-2">
+              La même silhouette, déclinée en trois finitions. Cliquez sur un modèle
+              pour voir les pointures encore disponibles.
+            </p>
+          </Reveal>
+
+          <ProductGrid products={sneakers} className="mt-8" priorityCount={3} />
+        </section>
       </div>
     </>
   );

@@ -6,11 +6,11 @@ const COLUMNS = [
   {
     title: "Boutique",
     links: [
+      { label: "Toute la boutique", href: "/collections" },
       { label: "Sneakers", href: "/sneakers" },
-      { label: "Vêtements", href: "/vetements" },
-      { label: "Accessoires", href: "/accessoires" },
-      { label: "Nouveautés", href: "/nouveautes" },
-      { label: "Collections", href: "/collections" },
+      { label: "Catégories", href: "/#categories" },
+      { label: "Promotions", href: "/#promotions" },
+      { label: "À propos", href: "/a-propos" },
     ],
   },
   {
@@ -50,26 +50,27 @@ export function Footer() {
           <div>
             <Link href="/" className="mb-4 inline-flex items-center gap-2.5">
               <span
-                className="grid size-8 place-items-center rounded-md border border-accent-line bg-accent-soft"
+                className="grid size-8 place-items-center rounded-lg bg-[#1b1710]"
                 aria-hidden="true"
               >
                 <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
                   <path
-                    d="M3 11.5L7 7.5L9.5 10L13.5 4.5"
-                    stroke="#2F8CFF"
+                    d="M3 4.5h9M3 8h9M3 11.5h6"
+                    stroke="#f5b301"
                     strokeWidth="2"
-                    strokeLinecap="square"
+                    strokeLinecap="round"
                   />
                 </svg>
               </span>
-              <span className="font-display text-lg font-extrabold tracking-[-0.03em] [word-spacing:0.14em] uppercase">
-                Step Up
+              <span className="font-display text-lg font-extrabold tracking-[-0.03em]">
+                <span className="text-fg">Ecom</span>
+                <span className="text-accent-2">DZ</span>
               </span>
             </Link>
 
             <p className="max-w-xs text-sm leading-relaxed text-fg-2">
-              Sneakers et streetwear sélectionnés à l’unité. Chaque paire est contrôlée
-              avant d’être mise en ligne.
+              La boutique e-commerce moderne et algérienne. Des produits tendance
+              sélectionnés pour vous, livrés partout en Algérie.
             </p>
 
             <ul className="mt-6 space-y-2.5 text-sm text-fg-2">
@@ -146,7 +147,7 @@ export function Footer() {
         {/* ------------------------------------------------------------ bas */}
         <div className="mt-10 flex flex-col items-start justify-between gap-4 border-t border-line pt-6 sm:flex-row sm:items-center">
           <p className="text-xs text-fg-3">
-            © 2026 STEP UP — Tous droits réservés.
+            © 2026 EcomDZ — Tous droits réservés. Livraison partout en Algérie.
           </p>
 
           <div className="flex items-center gap-3">
