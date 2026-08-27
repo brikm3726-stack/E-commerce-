@@ -34,7 +34,7 @@ export default function AccessoiresPage() {
         meta={
           products.length > 0
             ? `${products.length} article${products.length > 1 ? "s" : ""} en ligne`
-            : "Bientôt disponible"
+            : undefined
         }
       />
 

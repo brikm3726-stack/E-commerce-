@@ -26,7 +26,7 @@ export default function VetementsPage() {
         meta={
           products.length > 0
             ? `${products.length} pièce${products.length > 1 ? "s" : ""} en ligne`
-            : "Bientôt disponible"
+            : undefined
         }
       />
 

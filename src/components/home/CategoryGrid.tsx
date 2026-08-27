@@ -59,11 +59,11 @@ export function CategoryGrid() {
                 </div>
 
                 <div className="relative">
-                  <span className="badge mb-3">
-                    {count > 0
-                      ? `${count} modèle${count > 1 ? "s" : ""}`
-                      : "Bientôt disponible"}
-                  </span>
+                  {count > 0 && (
+                    <span className="badge mb-3">
+                      {count} modèle{count > 1 ? "s" : ""}
+                    </span>
+                  )}
 
                   <h3 className="display text-2xl">{category.label}</h3>
 

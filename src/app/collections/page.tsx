@@ -28,17 +28,17 @@ export default function CollectionsPage() {
       count: `${all.length} pièces`,
       featured: true,
     },
-    ...CATEGORIES.map((category) => ({
-      href: category.href,
-      label: category.title,
-      description: category.description,
-      image: category.image,
-      count:
-        getByCategory(category.slug).length > 0
-          ? `${getByCategory(category.slug).length} modèle${getByCategory(category.slug).length > 1 ? "s" : ""}`
-          : "Bientôt",
-      featured: false,
-    })),
+    ...CATEGORIES.map((category) => {
+      const count = getByCategory(category.slug).length;
+      return {
+        href: category.href,
+        label: category.title,
+        description: category.description,
+        image: category.image,
+        count: count > 0 ? `${count} modèle${count > 1 ? "s" : ""}` : null,
+        featured: false,
+      };
+    }),
   ];
 
   return (
@@ -85,7 +85,7 @@ export default function CollectionsPage() {
                 </div>
 
                 <div className="relative w-full p-7 md:p-9">
-                  <span className="badge mb-3">{collection.count}</span>
+                  {collection.count && <span className="badge mb-3">{collection.count}</span>}
                   <h2
                     className={`display ${
                       collection.featured
