@@ -13,7 +13,8 @@ import {
   Truck,
 } from "lucide-react";
 import { WILAYAS } from "@/data/wilayas";
-import { SHIPPING, SITE } from "@/data/site";
+import { SITE } from "@/data/site";
+import { noestRate } from "@/data/shipping-noest";
 import { isValidPhone, normalizePhone, orderReference } from "@/lib/format";
 import { notifyOrder, type NotifyResult } from "@/lib/notify";
 import type { Order, Product } from "@/lib/types";
@@ -54,18 +55,16 @@ const DELIVERY = [
     id: "domicile" as const,
     label: "التوصيل للمنزل",
     detail: "نجيبولك الطلبية لباب دارك",
-    price: SHIPPING.domicile,
   },
   {
     id: "bureau" as const,
-    label: "التوصيل للمكتب",
-    detail: "تروح تحوّسها من مكتب التوصيل",
-    price: SHIPPING.bureau,
+    label: "التوصيل لمكتب NOEST",
+    detail: "تروح تحوّسها من أقرب مكتب",
   },
 ];
 
 const GUARANTEES = [
-  { icon: Truck, title: "التوصيل لـ 58 ولاية", detail: "في كامل التراب الوطني" },
+  { icon: Truck, title: "التوصيل لـ 55 ولاية", detail: "مع NOEST Express" },
   { icon: ShieldCheck, title: "الدفع عند الاستلام", detail: "ما تخلّص حتى توصلك" },
   { icon: RotateCcw, title: "تبديل خلال 48 ساعة", detail: "إذا المقاس ما جاكش" },
   { icon: BadgeCheck, title: "سلعة مراقبة", detail: "نتأكدو من كل زوج قبل الإرسال" },
@@ -110,12 +109,15 @@ export function OrderLanding({ products }: { products: Product[] }) {
   const [notified, setNotified] = useState<NotifyResult | null>(null);
 
   const product = products.find((p) => p.slug === slug) ?? products[0];
-  const communes = useMemo(
-    () => WILAYAS.find((w) => w.name === wilaya)?.communes ?? [],
-    [wilaya],
-  );
+  const selected = useMemo(() => WILAYAS.find((w) => w.name === wilaya), [wilaya]);
+  const communes = selected?.communes ?? [];
+  const wilayaCode = selected?.code ?? "";
 
-  const shipping = DELIVERY.find((d) => d.id === delivery)!.price;
+  // Le tarif NOEST depend de la wilaya : tant qu'elle n'est pas choisie, on
+  // n'affiche aucun prix de livraison plutot qu'un montant qui changera.
+  const rate = wilayaCode ? noestRate(wilayaCode) : null;
+  const covered = !wilayaCode || rate !== null;
+  const shipping = rate ? (delivery === "domicile" ? rate.domicile : rate.stopdesk) : 0;
   const total = product.price + shipping;
   const inStock = product.sizes.filter((s) => s.stock > 0).length;
 
@@ -139,6 +141,7 @@ export function OrderLanding({ products }: { products: Product[] }) {
     if (name.trim().length < 3) next.name = "اكتب اسمك و لقبك";
     if (!isValidPhone(phone)) next.phone = "رقم غير صحيح. مثال : 0555 12 34 56";
     if (!wilaya) next.wilaya = "اختر الولاية";
+    else if (!rate) next.wilaya = "للأسف NOEST ما توصلش لهذه الولاية";
     if (!commune) next.commune = "اختر البلدية";
     if (delivery === "domicile" && address.trim().length < 6)
       next.address = "اكتب العنوان بالتفصيل";
@@ -212,8 +215,8 @@ export function OrderLanding({ products }: { products: Product[] }) {
       `${o.customer.firstName} ${o.customer.lastName} — ${o.customer.phone}`,
       `${o.customer.wilaya} / ${o.customer.commune}`,
       o.delivery === "domicile"
-        ? `التوصيل للمنزل — ${o.customer.address}`
-        : "التوصيل للمكتب",
+        ? `التوصيل للمنزل (NOEST) — ${o.customer.address}`
+        : "التوصيل لمكتب NOEST",
       `المنتج : ${product.name} ${product.colorName} — مقاس ${size}`,
       `المجموع : ${dzdText(total)} (الدفع عند الاستلام)`,
     ].join("\n");
@@ -480,31 +483,62 @@ export function OrderLanding({ products }: { products: Product[] }) {
             <div className="mt-6">
               <Step n={4} title="طريقة التوصيل" />
 
-              <div className="mt-3 grid grid-cols-2 gap-2.5">
-                {DELIVERY.map((option) => {
-                  const active = option.id === delivery;
-                  return (
-                    <button
-                      key={option.id}
-                      type="button"
-                      onClick={() => setDelivery(option.id)}
-                      aria-pressed={active}
-                      className={`rounded-2xl border-2 p-3 text-start transition-all
-                        ${active ? "border-accent bg-accent-soft" : "border-line"}`}
-                    >
-                      <span className="block text-sm font-bold">{option.label}</span>
-                      <span className="mt-0.5 block text-[0.7rem] text-fg-2">
-                        {option.detail}
-                      </span>
-                      <span className="mt-1.5 block text-sm font-black text-accent-2">
-                        <Dzd value={option.price} />
-                      </span>
-                    </button>
-                  );
-                })}
+              {/* Le client doit savoir qui va sonner à sa porte. */}
+              <div className="mt-3 flex items-center gap-3 rounded-2xl border border-line bg-white p-3">
+                <Image
+                  src="/noest-logo.webp"
+                  alt="NOEST Express"
+                  width={360}
+                  height={471}
+                  className="h-11 w-auto shrink-0"
+                />
+                <p className="text-[0.78rem] leading-snug text-fg-2">
+                  التوصيل مع <span className="font-bold text-fg">NOEST Express</span> —
+                  السعر يتبدل حسب الولاية.
+                </p>
               </div>
 
-              {delivery === "domicile" && (
+              {!wilayaCode && (
+                <p className="mt-3 rounded-xl bg-ink-2 p-3 text-center text-[0.8rem] font-semibold text-fg-2">
+                  اختر ولايتك فوق باش يبان سعر التوصيل
+                </p>
+              )}
+
+              {wilayaCode && !covered && (
+                <p className="mt-3 rounded-xl border border-accent-line bg-accent-soft p-3 text-center text-[0.8rem] font-bold">
+                  للأسف NOEST ما توصلش لولاية {wilaya}. كليمي علينا على واتساب و
+                  نلقاو حل.
+                </p>
+              )}
+
+              {rate && (
+                <div className="mt-3 grid grid-cols-2 gap-2.5">
+                  {DELIVERY.map((option) => {
+                    const active = option.id === delivery;
+                    const price = option.id === "domicile" ? rate.domicile : rate.stopdesk;
+                    return (
+                      <button
+                        key={option.id}
+                        type="button"
+                        onClick={() => setDelivery(option.id)}
+                        aria-pressed={active}
+                        className={`rounded-2xl border-2 p-3 text-start transition-all
+                          ${active ? "border-accent bg-accent-soft" : "border-line"}`}
+                      >
+                        <span className="block text-sm font-bold">{option.label}</span>
+                        <span className="mt-0.5 block text-[0.7rem] text-fg-2">
+                          {option.detail}
+                        </span>
+                        <span className="mt-1.5 block text-sm font-black text-accent-2">
+                          <Dzd value={price} />
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+
+              {rate && delivery === "domicile" && (
                 <div data-field="address" className="mt-3">
                   <textarea
                     value={address}
@@ -521,10 +555,15 @@ export function OrderLanding({ products }: { products: Product[] }) {
             {/* ------------------------------------------------ récapitulatif */}
             <div className="mt-6 rounded-2xl bg-ink-2 p-4 text-sm">
               <Row label="السعر" value={<Dzd value={product.price} />} />
-              <Row label="التوصيل" value={<Dzd value={shipping} />} />
+              <Row
+                label="التوصيل"
+                value={rate ? <Dzd value={shipping} /> : <span className="text-fg-3">—</span>}
+              />
               <div className="mt-2 flex items-center justify-between border-t border-line pt-2">
                 <span className="font-bold">المجموع</span>
-                <span className="text-lg font-black text-accent-2"><Dzd value={total} /></span>
+                <span className="text-lg font-black text-accent-2">
+                  {rate ? <Dzd value={total} /> : <span className="text-fg-3">—</span>}
+                </span>
               </div>
             </div>
 
@@ -613,8 +652,12 @@ export function OrderLanding({ products }: { products: Product[] }) {
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-card/95 p-3 backdrop-blur-md lg:hidden">
         <div className="mx-auto flex max-w-lg items-center gap-3">
           <div className="shrink-0">
-            <p className="text-[0.65rem] text-fg-3">المجموع</p>
-            <p className="text-base font-black leading-none"><Dzd value={total} /></p>
+            <p className="text-[0.65rem] text-fg-3">
+              {rate ? "المجموع" : "السعر"}
+            </p>
+            <p className="text-base font-black leading-none">
+              <Dzd value={rate ? total : product.price} />
+            </p>
           </div>
           <a
             href="#commander"
