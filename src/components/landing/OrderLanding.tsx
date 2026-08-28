@@ -121,6 +121,12 @@ export function OrderLanding({ products }: { products: Product[] }) {
   const total = product.price + shipping;
   const inStock = product.sizes.filter((s) => s.stock > 0).length;
 
+  /** Descend jusqu'a la premiere etape du formulaire. */
+  const scrollToForm = () =>
+    document
+      .querySelector('[data-field="size"]')
+      ?.scrollIntoView({ behavior: "smooth", block: "center" });
+
   /** Changer de coloris peut invalider la pointure choisie. */
   const pickColor = (next: string) => {
     setSlug(next);
@@ -301,37 +307,28 @@ export function OrderLanding({ products }: { products: Product[] }) {
   return (
     <div dir="rtl" lang="ar" className="font-arabic bg-ink pb-28 lg:pb-0">
       {/* ------------------------------------------------------------ hero */}
-      <header
-        className="px-5 pt-6 pb-8 text-center text-[#1b1710]"
-        style={{ background: "linear-gradient(180deg, #f0ab00 0%, #ffc93c 100%)" }}
-      >
-        <p className="text-lg font-black tracking-tight">
-          Ecom<span className="text-white">DZ</span>
-        </p>
+      {/* La maquette publicitaire fournie par le client, posée telle quelle :
+          elle porte deja le logo, le titre, le prix et la reduction. Rien
+          n'est redessine par-dessus. Le bouton peint en bas est double d'un
+          lien invisible, cale en %, qui descend au formulaire. */}
+      <header className="relative">
+        <Image
+          src="/offre-hero.webp"
+          alt={`صباط ${product.name} بـ 1800 دج — الدفع عند الاستلام`}
+          width={1254}
+          height={1254}
+          priority
+          sizes="(max-width: 640px) 100vw, 640px"
+          className="block w-full"
+        />
 
-        <span
-          className="mt-4 inline-flex items-center gap-1.5 rounded-full border
-            border-[#1b1710]/15 bg-white/60 px-3 py-1 text-[0.7rem] font-bold"
-        >
-          الدفع عند الاستلام — التوصيل لـ 58 ولاية
-        </span>
-
-        <h1 className="mt-3 text-[clamp(1.6rem,6.5vw,2.4rem)] leading-tight font-black">
-          صباط <span className="font-display">{product.name}</span>
-          <br />
-          <span className="text-white">بـ <Dzd value={product.price} /> فقط</span>
-        </h1>
-
-        <p className="mx-auto mt-2 max-w-sm text-sm font-semibold text-[#3d3212]">
-          جودة عالية و تصميم يجي مع كل شي. عمّر الاستمارة و نوصلولك.
-        </p>
-
-        <div className="mt-4 flex items-center justify-center gap-2 text-sm font-bold">
-          <span className="text-[#3d3212] line-through"><Dzd value={product.oldPrice!} /></span>
-          <span className="rounded-lg bg-[#1b1710] px-2 py-0.5 text-[#ffd964]">
-            تخفيض 54%
-          </span>
-        </div>
+        <button
+          type="button"
+          onClick={scrollToForm}
+          aria-label="اطلب الآن"
+          className="absolute rounded-full transition-colors duration-300 hover:bg-white/15"
+          style={{ left: "40.3%", top: "91.2%", width: "20%", height: "5%" }}
+        />
       </header>
 
       <div className="mx-auto max-w-lg px-5">
@@ -659,18 +656,13 @@ export function OrderLanding({ products }: { products: Product[] }) {
               <Dzd value={rate ? total : product.price} />
             </p>
           </div>
-          <a
-            href="#commander"
-            onClick={(e) => {
-              e.preventDefault();
-              document
-                .querySelector('[data-field="size"]')
-                ?.scrollIntoView({ behavior: "smooth", block: "center" });
-            }}
+          <button
+            type="button"
+            onClick={scrollToForm}
             className="btn btn-primary h-12 flex-1"
           >
             اطلب الآن
-          </a>
+          </button>
         </div>
       </div>
     </div>
