@@ -1,15 +1,22 @@
 /**
- * Grille tarifaire NOEST Express, au départ de Tizi Ouzou.
+ * Grille tarifaire de livraison, au départ de Tizi Ouzou.
  *
- * Saisie depuis la grille fournie par le transporteur (dossier
- * « NOEST DILEVRY TARIF »). Les montants sont en dinars, par colis.
+ * Deux origines, à ne pas confondre :
  *
- * NOEST dessert 55 des 58 wilayas : Bordj Badji Mokhtar (50), In Guezzam (54)
- * et Djanet (56) sont absentes de la grille — le formulaire le dit au client
- * au lieu de lui afficher un prix qui n'existe pas.
+ * 1. `NOEST_RATES` — les 55 wilayas réellement desservies par NOEST Express,
+ *    saisies depuis la grille du transporteur (dossier « NOEST DILEVRY TARIF »).
+ *    Ce sont les montants qu'il facture.
  *
- * Ces prix sont facturés au vendeur ; ils sont répercutés tels quels au
- * client. Les modifier ici les met à jour partout.
+ * 2. `ESTIMATED_RATES` — Bordj Badji Mokhtar (50), In Guezzam (54) et
+ *    Djanet (56). NOEST ne les dessert PAS. Ces prix sont estimés d'après la
+ *    wilaya voisine comparable, uniquement pour que le client puisse passer
+ *    commande ; l'acheminement reste à organiser au cas par cas.
+ *
+ * Une commande vers ces trois wilayas est signalée dans l'e-mail reçu par le
+ * vendeur : il ne faut surtout pas l'expédier comme les autres.
+ *
+ * Ces prix sont facturés au vendeur puis répercutés au client. Les modifier
+ * ici les met à jour partout.
  */
 
 export interface NoestRate {
@@ -17,6 +24,8 @@ export interface NoestRate {
   domicile: number;
   /** retrait au bureau NOEST le plus proche */
   stopdesk: number;
+  /** vrai quand NOEST ne dessert pas la wilaya : prix estimé, à confirmer */
+  estimated?: boolean;
 }
 
 /** Clé = code wilaya sur deux chiffres. */
@@ -78,7 +87,23 @@ export const NOEST_RATES: Record<string, NoestRate> = {
   "58": { domicile: 1100, stopdesk: 600 },
 };
 
-/** Tarif d'une wilaya, ou `null` si NOEST ne la dessert pas. */
+/**
+ * Les trois wilayas hors réseau NOEST, alignées sur leur voisine comparable :
+ *
+ *   50 Bordj Badji Mokhtar — détachée d'Adrar, plus au sud → tarif Tamanrasset
+ *   54 In Guezzam          — détachée de Tamanrasset, frontière du Niger → tarif Illizi
+ *   56 Djanet              — détachée d'Illizi, même extrême sud-est → tarif Illizi
+ *
+ * Estimations, pas des prix de transporteur : elles servent à ne pas bloquer
+ * la commande, pas à couvrir un coût réel connu.
+ */
+export const ESTIMATED_RATES: Record<string, NoestRate> = {
+  "50": { domicile: 1850, stopdesk: 900, estimated: true },
+  "54": { domicile: 1900, stopdesk: 1100, estimated: true },
+  "56": { domicile: 1900, stopdesk: 1100, estimated: true },
+};
+
+/** Tarif d'une wilaya. Toutes les wilayas en ont un désormais. */
 export function noestRate(wilayaCode: string): NoestRate | null {
-  return NOEST_RATES[wilayaCode] ?? null;
+  return NOEST_RATES[wilayaCode] ?? ESTIMATED_RATES[wilayaCode] ?? null;
 }

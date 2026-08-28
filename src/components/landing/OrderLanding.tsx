@@ -81,7 +81,7 @@ const DELIVERY = [
 ];
 
 const GUARANTEES = [
-  { icon: Truck, title: "التوصيل لـ 55 ولاية", detail: "مع NOEST Express" },
+  { icon: Truck, title: "التوصيل لـ 58 ولاية", detail: "في كامل التراب الوطني" },
   { icon: ShieldCheck, title: "الدفع عند الاستلام", detail: "ما تخلّص حتى توصلك" },
   { icon: RotateCcw, title: "تبديل خلال 48 ساعة", detail: "إذا المقاس ما جاكش" },
   { icon: BadgeCheck, title: "سلعة مراقبة", detail: "نتأكدو من كل زوج قبل الإرسال" },
@@ -133,7 +133,8 @@ export function OrderLanding({ products }: { products: Product[] }) {
   // Le tarif NOEST depend de la wilaya : tant qu'elle n'est pas choisie, on
   // n'affiche aucun prix de livraison plutot qu'un montant qui changera.
   const rate = wilayaCode ? noestRate(wilayaCode) : null;
-  const covered = !wilayaCode || rate !== null;
+  // hors reseau NOEST : la commande passe, mais le delai n'est pas garanti
+  const offNetwork = rate?.estimated === true;
   const shipping = rate ? (delivery === "domicile" ? rate.domicile : rate.stopdesk) : 0;
   const total = product.price + shipping;
   const inStock = product.sizes.filter((s) => s.stock > 0).length;
@@ -164,7 +165,6 @@ export function OrderLanding({ products }: { products: Product[] }) {
     if (name.trim().length < 3) next.name = "اكتب اسمك و لقبك";
     if (!isValidPhone(phone)) next.phone = "رقم غير صحيح. مثال : 0555 12 34 56";
     if (!wilaya) next.wilaya = "اختر الولاية";
-    else if (!rate) next.wilaya = "للأسف NOEST ما توصلش لهذه الولاية";
     if (!commune) next.commune = "اختر البلدية";
     if (delivery === "domicile" && address.trim().length < 6)
       next.address = "اكتب العنوان بالتفصيل";
@@ -222,7 +222,12 @@ export function OrderLanding({ products }: { products: Product[] }) {
     // L'e-mail part en arrière-plan : on n'attend PAS le réseau pour afficher
     // la confirmation. Faire patienter quelqu'un devant un écran figé, sur un
     // tunnel Facebook Ads, c'est la commande perdue.
-    void notifyOrder(built, "Page pub arabe").then(setNotified);
+    void notifyOrder(
+      built,
+      offNetwork
+        ? `Page pub arabe — HORS RESEAU NOEST (${wilaya}), acheminement a organiser`
+        : "Page pub arabe",
+    ).then(setNotified);
 
     // court délai, juste pour que le bouton montre son état de chargement
     await new Promise((r) => setTimeout(r, 500));
@@ -519,10 +524,10 @@ export function OrderLanding({ products }: { products: Product[] }) {
                 </p>
               )}
 
-              {wilayaCode && !covered && (
+              {offNetwork && (
                 <p className="mt-3 rounded-xl border border-accent-line bg-accent-soft p-3 text-center text-[0.8rem] font-bold">
-                  للأسف NOEST ما توصلش لولاية {wilaya}. كليمي علينا على واتساب و
-                  نلقاو حل.
+                  ولاية {wilaya} بعيدة شوية — التوصيل ممكن، بصح ناخذو وقت أكثر.
+                  نتصلو بيك باش نتفاهمو على الأجل قبل ما نرسلو.
                 </p>
               )}
 
