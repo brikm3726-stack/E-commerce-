@@ -50,6 +50,23 @@ function Dzd({ value }: { value: number }) {
 /** Meme montant en texte brut, pour le message WhatsApp. */
 const dzdText = (value: number) => `${value} دج`;
 
+/**
+ * Maquette publicitaire par coloris. Elle change quand le client change de
+ * couleur dans l'etape 1 : la chaussure qu'il voit en haut est celle qu'il
+ * commande.
+ *
+ * Les trois fichiers partagent le meme gabarit, bouton peint compris, d'ou
+ * une seule zone cliquable pour les trois (voir PAINTED_CTA).
+ */
+const HERO_BY_SLUG: Record<string, string> = {
+  "step-one-navy": "/offre-hero-step-one-navy.webp",
+  "step-one-white": "/offre-hero-step-one-white.webp",
+  "step-one-black": "/offre-hero-step-one-black.webp",
+};
+
+/** Bouton « اطلب الآن » peint dans les maquettes, en % de l'image. */
+const PAINTED_CTA = { left: "39%", top: "90.5%", width: "22%", height: "6.5%" };
+
 const DELIVERY = [
   {
     id: "domicile" as const,
@@ -313,13 +330,14 @@ export function OrderLanding({ products }: { products: Product[] }) {
           lien invisible, cale en %, qui descend au formulaire. */}
       <header className="relative">
         <Image
-          src="/offre-hero.webp"
-          alt={`صباط ${product.name} بـ 1800 دج — الدفع عند الاستلام`}
-          width={1254}
-          height={1254}
+          key={product.slug}
+          src={HERO_BY_SLUG[product.slug] ?? HERO_BY_SLUG["step-one-navy"]}
+          alt={`صباط ${product.name} ${product.colorName} بـ 1800 دج — الدفع عند الاستلام`}
+          width={900}
+          height={900}
           priority
           sizes="(max-width: 640px) 100vw, 640px"
-          className="block w-full"
+          className="anim-fade-in block w-full"
         />
 
         <button
@@ -327,7 +345,7 @@ export function OrderLanding({ products }: { products: Product[] }) {
           onClick={scrollToForm}
           aria-label="اطلب الآن"
           className="absolute rounded-full transition-colors duration-300 hover:bg-white/15"
-          style={{ left: "40.3%", top: "91.2%", width: "20%", height: "5%" }}
+          style={PAINTED_CTA}
         />
       </header>
 
