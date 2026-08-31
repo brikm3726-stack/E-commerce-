@@ -32,11 +32,21 @@ jobs:
         run: npm ci
 
       - name: Construire l'export statique
-        # NEXT_PUBLIC_ est indispensable : cette variable doit être lisible
-        # à la fois par next.config.ts (build) et par le code qui tourne
-        # dans le navigateur (loader d'images) — voir next.config.ts.
+        # NEXT_PUBLIC_ est indispensable : ces variables doivent être lisibles
+        # à la fois par next.config.ts (build) et par le code qui tourne dans
+        # le navigateur — voir next.config.ts et src/lib/shopify.ts.
+        # Règle les valeurs Shopify dans :
+        #   GitHub → Settings → Secrets and variables → Actions → onglet "Variables"
+        # (le jeton Storefront est PUBLIC par conception ; aucun secret Admin ici)
         env:
           NEXT_PUBLIC_GITHUB_PAGES: "true"
+          NEXT_PUBLIC_SHOPIFY_DOMAIN: ${{ vars.NEXT_PUBLIC_SHOPIFY_DOMAIN }}
+          NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN: ${{ vars.NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN }}
+          NEXT_PUBLIC_SHOPIFY_PRODUCT_HANDLE: ${{ vars.NEXT_PUBLIC_SHOPIFY_PRODUCT_HANDLE }}
+          NEXT_PUBLIC_SHOPIFY_HANDLE_NAVY: ${{ vars.NEXT_PUBLIC_SHOPIFY_HANDLE_NAVY }}
+          NEXT_PUBLIC_SHOPIFY_HANDLE_WHITE: ${{ vars.NEXT_PUBLIC_SHOPIFY_HANDLE_WHITE }}
+          NEXT_PUBLIC_SHOPIFY_HANDLE_BLACK: ${{ vars.NEXT_PUBLIC_SHOPIFY_HANDLE_BLACK }}
+          NEXT_PUBLIC_SHOPIFY_API_VERSION: ${{ vars.NEXT_PUBLIC_SHOPIFY_API_VERSION }}
         run: npm run build
 
       - name: Marquer le dossier comme statique (pas de traitement Jekyll)

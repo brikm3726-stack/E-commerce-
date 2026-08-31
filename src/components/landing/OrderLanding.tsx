@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   BadgeCheck,
   Check,
@@ -17,6 +17,14 @@ import { SITE } from "@/data/site";
 import { noestRate } from "@/data/shipping-noest";
 import { isValidPhone, normalizePhone, orderReference } from "@/lib/format";
 import { notifyOrder, type NotifyResult } from "@/lib/notify";
+import {
+  shopifyConfigured,
+  handleForSlug,
+  fetchProduct,
+  findVariant,
+  createCartCheckout,
+  type ShopifyProduct,
+} from "@/lib/shopify";
 import type { Order, Product } from "@/lib/types";
 
 /**
@@ -119,13 +127,36 @@ export function OrderLanding({ products }: { products: Product[] }) {
   const [wilaya, setWilaya] = useState("");
   const [commune, setCommune] = useState("");
   const [address, setAddress] = useState("");
+  const [quantity, setQuantity] = useState(1);
   const [errors, setErrors] = useState<FormErrors>({});
   const [sending, setSending] = useState(false);
   const [order, setOrder] = useState<Order | null>(null);
   /** `null` tant que l'envoi de l'e-mail est en cours. */
   const [notified, setNotified] = useState<NotifyResult | null>(null);
 
+  // ---- Shopify (storefront externe) : produit / variantes / stock réels ----
+  const shopMode = shopifyConfigured();
+  const [shopProduct, setShopProduct] = useState<ShopifyProduct | null>(null);
+  const [shopError, setShopError] = useState<string | null>(null);
+
   const product = products.find((p) => p.slug === slug) ?? products[0];
+
+  useEffect(() => {
+    if (!shopMode) return;
+    let alive = true;
+    setShopProduct(null);
+    setShopError(null);
+    fetchProduct(handleForSlug(slug))
+      .then((p) => {
+        if (!alive) return;
+        if (!p) setShopError("المنتج غير متوفر حاليا");
+        else setShopProduct(p);
+      })
+      .catch(() => alive && setShopError("تعذّر الاتصال بالمتجر، حاول مرة أخرى"));
+    return () => {
+      alive = false;
+    };
+  }, [slug, shopMode]);
   const selected = useMemo(() => WILAYAS.find((w) => w.name === wilaya), [wilaya]);
   const communes = selected?.communes ?? [];
   const wilayaCode = selected?.code ?? "";
@@ -136,8 +167,33 @@ export function OrderLanding({ products }: { products: Product[] }) {
   // hors reseau NOEST : la commande passe, mais le delai n'est pas garanti
   const offNetwork = rate?.estimated === true;
   const shipping = rate ? (delivery === "domicile" ? rate.domicile : rate.stopdesk) : 0;
-  const total = product.price + shipping;
+
+  // Variante Shopify correspondant à la pointure choisie (si Shopify est branché)
+  const shopVariant =
+    shopProduct && size
+      ? findVariant(shopProduct, size, [product.colorName, slug])
+      : undefined;
+
+  /** Prix unitaire : celui de Shopify quand il est disponible, sinon le catalogue. */
+  const unitPrice = shopVariant?.price ?? shopProduct?.minPrice ?? product.price;
+
+  const total = unitPrice * quantity + shipping;
   const inStock = product.sizes.filter((s) => s.stock > 0).length;
+
+  /** Pointure disponible : stock Shopify réel s'il est branché, sinon catalogue. */
+  const sizeAvailable = (sizeValue: string, catalogStock: number) => {
+    if (shopMode && shopProduct) {
+      const v = findVariant(shopProduct, sizeValue, [product.colorName, slug]);
+      return v ? v.available : false;
+    }
+    return catalogStock > 0;
+  };
+
+  /** Quantité maxi : stock réel de la variante Shopify, sinon 5. */
+  const maxQuantity = Math.max(
+    1,
+    shopVariant?.quantityAvailable ?? (shopMode ? 5 : 1),
+  );
 
   /** Descend jusqu'a la premiere etape du formulaire. */
   const scrollToForm = () =>
@@ -148,6 +204,8 @@ export function OrderLanding({ products }: { products: Product[] }) {
   /** Changer de coloris peut invalider la pointure choisie. */
   const pickColor = (next: string) => {
     setSlug(next);
+    setQuantity(1);
+    setShopError(null);
     const stillThere = products
       .find((p) => p.slug === next)
       ?.sizes.some((s) => s.size === size && s.stock > 0);
@@ -185,7 +243,50 @@ export function OrderLanding({ products }: { products: Product[] }) {
     }
 
     setSending(true);
+    setShopError(null);
     const [firstName, ...rest] = name.trim().split(/\s+/);
+
+    // ---- Storefront externe : panier Shopify → checkout Shopify sécurisé ----
+    // Aucune simulation : on crée un vrai panier via la Storefront API et on
+    // redirige vers le checkout Shopify. La commande, le paiement, les
+    // notifications et le stock sont ensuite gérés par Shopify.
+    if (shopMode) {
+      try {
+        const sp = shopProduct ?? (await fetchProduct(handleForSlug(slug)));
+        if (!sp || !sp.available) throw new Error("unavailable");
+        const variant = findVariant(sp, size, [product.colorName, slug]);
+        if (!variant || !variant.available) throw new Error("variant");
+        const qty = Math.max(1, Math.min(quantity, maxQuantity));
+        const url = await createCartCheckout(
+          variant.id,
+          qty,
+          {
+            firstName,
+            lastName: rest.join(" "),
+            phone: normalizePhone(phone),
+            wilaya,
+            commune,
+            address: address.trim() || commune,
+            deliveryLabel:
+              delivery === "domicile" ? "التوصيل للمنزل" : "التوصيل للمكتب",
+          },
+          `طلب من صفحة /offre — ${product.name} ${product.colorName} — مقاس ${size} × ${qty}`,
+        );
+        window.location.href = url; // checkout Shopify sécurisé
+        return;
+      } catch (err) {
+        setSending(false);
+        const code = err instanceof Error ? err.message : "";
+        setShopError(
+          code === "unavailable"
+            ? "المنتج غير متوفر حاليا"
+            : code === "variant"
+              ? "هذا المقاس غير متوفر، اختر مقاسا آخر"
+              : "تعذّر إتمام الطلب، تأكد من اتصالك بالأنترنت و حاول مرة أخرى",
+        );
+        return;
+      }
+    }
 
     const built: Order = {
       reference: orderReference(),
@@ -407,14 +508,18 @@ export function OrderLanding({ products }: { products: Product[] }) {
 
               <div className="mt-3 flex flex-wrap gap-2">
                 {product.sizes.map((s) => {
-                  const out = s.stock === 0;
+                  const out = !sizeAvailable(s.size, s.stock);
                   const active = s.size === size;
                   return (
                     <button
                       key={s.size}
                       type="button"
                       disabled={out}
-                      onClick={() => setSize(s.size)}
+                      onClick={() => {
+                        setSize(s.size);
+                        setQuantity(1);
+                        setShopError(null);
+                      }}
                       aria-pressed={active}
                       className={`h-12 min-w-14 rounded-xl border-2 text-base font-bold transition-all
                         ${
@@ -431,6 +536,38 @@ export function OrderLanding({ products }: { products: Product[] }) {
                 })}
               </div>
               <FieldError message={errors.size} />
+
+              {/* Quantité — uniquement quand la boutique Shopify est branchée */}
+              {shopMode && (
+                <div className="mt-4 flex items-center justify-between">
+                  <span className="text-sm font-bold">الكمية</span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      aria-label="ناقص"
+                      onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                      disabled={quantity <= 1}
+                      className="grid size-10 place-items-center rounded-xl border-2
+                        border-line-strong text-lg font-bold disabled:opacity-40"
+                    >
+                      −
+                    </button>
+                    <span className="w-10 text-center text-lg font-black" aria-live="polite">
+                      {quantity}
+                    </span>
+                    <button
+                      type="button"
+                      aria-label="زائد"
+                      onClick={() => setQuantity((q) => Math.min(maxQuantity, q + 1))}
+                      disabled={quantity >= maxQuantity}
+                      className="grid size-10 place-items-center rounded-xl border-2
+                        border-line-strong text-lg font-bold disabled:opacity-40"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* ------------------------------------------- 3. coordonnées */}
@@ -574,7 +711,10 @@ export function OrderLanding({ products }: { products: Product[] }) {
 
             {/* ------------------------------------------------ récapitulatif */}
             <div className="mt-6 rounded-2xl bg-ink-2 p-4 text-sm">
-              <Row label="السعر" value={<Dzd value={product.price} />} />
+              <Row
+                label={quantity > 1 ? `السعر (${quantity}×)` : "السعر"}
+                value={<Dzd value={unitPrice * quantity} />}
+              />
               <Row
                 label="التوصيل"
                 value={rate ? <Dzd value={shipping} /> : <span className="text-fg-3">—</span>}
@@ -587,11 +727,26 @@ export function OrderLanding({ products }: { products: Product[] }) {
               </div>
             </div>
 
-            <button type="submit" disabled={sending} className="btn-cta mt-4 w-full">
+            {shopMode && shopProduct !== null && !shopProduct.available && (
+              <p className="mt-4 rounded-xl border border-accent-line bg-accent-soft p-3 text-center text-[0.85rem] font-bold">
+                هذا المنتج غير متوفر حاليا. كليمي علينا و نعلمك كي يرجع.
+              </p>
+            )}
+            {shopError && (
+              <p className="mt-4 rounded-xl border border-accent-line bg-accent-soft p-3 text-center text-[0.85rem] font-bold">
+                {shopError}
+              </p>
+            )}
+
+            <button
+              type="submit"
+              disabled={sending || (shopMode && shopProduct !== null && !shopProduct.available)}
+              className="btn-cta mt-4 w-full"
+            >
               {sending ? (
                 <>
                   <Loader2 size={18} className="animate-spin" />
-                  جاري الإرسال…
+                  {shopMode ? "جاري التحويل إلى الدفع الآمن…" : "جاري الإرسال…"}
                 </>
               ) : (
                 "اشتري الآن"
@@ -599,7 +754,9 @@ export function OrderLanding({ products }: { products: Product[] }) {
             </button>
 
             <p className="mt-3 text-center text-xs text-fg-3">
-              ما تخلّص والو دروك — الدفع كي توصلك الطلبية
+              {shopMode
+                ? "الدفع آمن عبر Shopify — تختار طريقة الدفع في الصفحة الموالية"
+                : "ما تخلّص والو دروك — الدفع كي توصلك الطلبية"}
             </p>
           </div>
         </form>
@@ -676,7 +833,7 @@ export function OrderLanding({ products }: { products: Product[] }) {
               {rate ? "المجموع" : "السعر"}
             </p>
             <p className="text-base font-black leading-none">
-              <Dzd value={rate ? total : product.price} />
+              <Dzd value={rate ? total : unitPrice * quantity} />
             </p>
           </div>
           <button
