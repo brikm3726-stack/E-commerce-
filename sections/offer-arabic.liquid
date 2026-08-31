@@ -1,56 +1,64 @@
 {%- comment -%}
-  Page d'atterrissage arabe (COD) — portée de src/components/landing/OrderLanding.tsx
-  À utiliser sur un template de PRODUIT (product.offre.json).
+  Page d'atterrissage arabe (COD) — reproduit le tunnel de
+  src/components/landing/OrderLanding.tsx (page GitHub /offre).
+
+  Mise en page : maquette publicitaire plein cadre → carte formulaire qui
+  chevauche → garanties → FAQ → avis. Colonne unique, largeur ~640 px.
+
   Le formulaire de commande est un bloc "@app" : ajoute-y le bloc de ton
-  application COD (Releasit / EasySell) depuis l'éditeur de thème.
-  Un formulaire natif de secours s'affiche tant qu'aucun bloc app n'est ajouté.
+  application COD (Releasit / EasySell) depuis l'éditeur de thème. Elle crée
+  la commande directement dans Shopify. Un formulaire natif de secours
+  s'affiche tant qu'aucun bloc app n'est présent.
 {%- endcomment -%}
 {%- liquid
   assign s = section.settings
   assign v = product.selected_or_first_available_variant
+  assign product_alt = product.title | escape
+
   assign has_app_block = false
   for block in section.blocks
     if block.type == '@app'
       assign has_app_block = true
     endif
   endfor
+
+  assign hero = s.hero_image
+  if hero == blank
+    assign hero = product.featured_media
+  endif
+
   assign discount = 0
   if v.compare_at_price > v.price
     assign discount = v.compare_at_price | minus: v.price | times: 100.0 | divided_by: v.compare_at_price | round
   endif
-  assign product_alt = product.title | escape
 -%}
 
 <section class="ar-offer" dir="rtl" lang="ar">
-  <div class="ar-wrap">
+  <div class="ar-funnel">
 
     {%- if s.badge_text != blank -%}
       <p class="ar-flash">{{ s.badge_text }}</p>
     {%- endif -%}
 
-    <div class="ar-grid">
-      {%- comment -%} ---------- Visuel produit ---------- {%- endcomment -%}
-      <div class="ar-media">
-        {%- if product.featured_media -%}
-          {{ product.featured_media | image_url: width: 1000 | image_tag: loading: 'eager', fetchpriority: 'high', alt: product_alt, class: 'ar-media__main' }}
-        {%- else -%}
-          {{ 'product-1' | placeholder_svg_tag: 'placeholder' }}
-        {%- endif -%}
-        {%- if product.media.size > 1 -%}
-          <div class="ar-thumbs">
-            {%- for media in product.media limit: 5 -%}
-              {%- assign thumb_alt = media.alt | default: product_alt -%}
-              {{ media | image_url: width: 200 | image_tag: loading: 'lazy', alt: thumb_alt }}
-            {%- endfor -%}
-          </div>
-        {%- endif -%}
-      </div>
+    {%- comment -%} ---------- 1. Maquette publicitaire (hero) ---------- {%- endcomment -%}
+    <header class="ar-hero">
+      {%- if hero != blank -%}
+        {{ hero | image_url: width: 1200 | image_tag: loading: 'eager', fetchpriority: 'high', alt: product_alt, class: 'ar-hero__img' }}
+      {%- else -%}
+        {{ 'product-1' | placeholder_svg_tag: 'placeholder ar-hero__img' }}
+      {%- endif -%}
 
-      {%- comment -%} ---------- Argumentaire + commande ---------- {%- endcomment -%}
-      <div class="ar-panel">
-        <h1 class="ar-title">{{ s.heading | default: product.title }}</h1>
-        {%- if s.subheading != blank -%}<p class="ar-sub">{{ s.subheading }}</p>{%- endif -%}
+      {%- if s.painted_cta -%}
+        <a href="#order" class="ar-hero__cta" aria-label="{{ s.cta_label | default: 'اطلب الآن' }}"
+           style="left:{{ s.cta_x }}%;top:{{ s.cta_y }}%;width:{{ s.cta_w }}%;height:{{ s.cta_h }}%"></a>
+      {%- endif -%}
+    </header>
 
+    {%- comment -%} ---------- 2. Carte formulaire ---------- {%- endcomment -%}
+    <div class="ar-card" id="order">
+      {%- if s.form_title != blank -%}<h1 class="ar-card__title">{{ s.form_title }}</h1>{%- endif -%}
+
+      {%- if s.show_price and v != blank -%}
         <div class="ar-price">
           <span class="ar-price__now"><bdi dir="ltr">{{ v.price | money_without_trailing_zeros }}</bdi></span>
           {%- if discount > 0 -%}
@@ -59,70 +67,64 @@
           {%- endif -%}
         </div>
         <p class="ar-cod">💵 {{ s.cod_text | default: 'الدفع عند الاستلام — ما تخلّص حتى توصلك' }}</p>
+      {%- endif -%}
 
-        {%- if s.benefits != blank -%}
-          <ul class="ar-benefits">
-            {%- assign lines = s.benefits | newline_to_br | split: '<br />' -%}
-            {%- for line in lines -%}
-              {%- assign clean = line | strip -%}
-              {%- if clean != blank -%}<li>{{ clean }}</li>{%- endif -%}
-            {%- endfor -%}
-          </ul>
-        {%- endif -%}
+      {%- comment -%} Bloc de l'app COD (Releasit / EasySell / …) + texte libre {%- endcomment -%}
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when '@app' -%}
+            <div class="ar-appform" {{ block.shopify_attributes }}>{% render block %}</div>
+          {%- when 'text' -%}
+            <div class="ar-rte" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
+        {%- endcase -%}
+      {%- endfor -%}
 
-        <div class="ar-form" id="order">
-          <h2 class="ar-form__title">{{ s.form_title | default: 'أطلب الآن — عمّر معلوماتك' }}</h2>
-
-          {%- comment -%} Bloc de l'app COD (Releasit / EasySell / …) {%- endcomment -%}
-          {%- for block in section.blocks -%}
-            {%- case block.type -%}
-              {%- when '@app' -%}
-                <div {{ block.shopify_attributes }}>{% render block %}</div>
-              {%- when 'text' -%}
-                <div class="ar-rte" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
-            {%- endcase -%}
-          {%- endfor -%}
-
-          {%- comment -%} Secours : formulaire natif → checkout Shopify (COD) {%- endcomment -%}
-          {%- unless has_app_block -%}
-            <div class="ar-fallback">
-              <p class="ar-fallback__note">⚠️ نموذج مؤقت. لاستقبال الطلبات مباشرة في Shopify، ثبّت تطبيق COD وأضف كتلته هنا من محرّر القالب.</p>
-              {%- form 'product', product, class: 'ar-native' -%}
-                <input type="hidden" name="id" value="{{ v.id }}">
-                {%- unless product.has_only_default_variant -%}
-                  {%- for option in product.options_with_values -%}
-                    <label class="ar-label">{{ option.name }}</label>
-                    <div class="ar-opts">
-                      {%- for value in option.values -%}
-                        {%- assign oid = 'ar-o-' | append: forloop.parentloop.index | append: forloop.index -%}
-                        <label for="{{ oid }}">
-                          <input type="radio" id="{{ oid }}" name="{{ option.name }}" value="{{ value | escape }}" {% if option.selected_value == value %}checked{% endif %}>
-                          {{ value }}
-                        </label>
-                      {%- endfor -%}
-                    </div>
+      {%- comment -%} Secours : formulaire natif → checkout Shopify (COD) {%- endcomment -%}
+      {%- unless has_app_block -%}
+        <div class="ar-fallback">
+          <p class="ar-fallback__note">⚠️ نموذج مؤقت. لاستقبال الطلبات مباشرة في Shopify، ثبّت تطبيق COD وأضف كتلته هنا من محرّر القالب.</p>
+          {%- form 'product', product, class: 'ar-native' -%}
+            <input type="hidden" name="id" value="{{ v.id }}">
+            {%- unless product.has_only_default_variant -%}
+              {%- for option in product.options_with_values -%}
+                <span class="ar-label">{{ option.name }}</span>
+                <div class="ar-opts">
+                  {%- for value in option.values -%}
+                    {%- assign oid = 'ar-o-' | append: forloop.parentloop.index | append: forloop.index -%}
+                    <label for="{{ oid }}">
+                      <input type="radio" id="{{ oid }}" name="{{ option.name }}" value="{{ value | escape }}" {% if option.selected_value == value %}checked{% endif %}>
+                      {{ value }}
+                    </label>
                   {%- endfor -%}
-                {%- endunless -%}
+                </div>
+              {%- endfor -%}
+            {%- endunless -%}
 
-                <label class="ar-label" for="ar-note">ملاحظة (الولاية، البلدية، العنوان، الهاتف)</label>
-                <textarea id="ar-note" name="note" rows="3" placeholder="مثال : 0555 12 34 56 — تيزي وزو — عزازقة — حي ..."></textarea>
+            <label class="ar-label" for="ar-note">ملاحظة (الاسم، رقم الهاتف، الولاية، البلدية، العنوان)</label>
+            <textarea id="ar-note" name="note" rows="3" placeholder="مثال : كريم — 0555 12 34 56 — تيزي وزو — عزازقة — حي ..."></textarea>
 
-                <button type="submit" name="checkout" class="button button--cta" style="width:100%;margin-top:1rem">
-                  {{ s.cta_label | default: 'اطلب الآن' }}
-                </button>
-                <button type="submit" class="button button--secondary" style="width:100%;margin-top:.5rem">
-                  زيد للسلة
-                </button>
-              {%- endform -%}
-            </div>
-          {%- endunless -%}
+            <button type="submit" name="checkout" class="button button--cta" style="width:100%;margin-top:1rem">
+              {{ s.cta_label | default: 'اطلب الآن' }}
+            </button>
+          {%- endform -%}
         </div>
-      </div>
+      {%- endunless -%}
     </div>
 
-    {%- comment -%} ---------- Garanties & FAQ (blocs) ---------- {%- endcomment -%}
+    {%- comment -%} ---------- 3. Blocs de réassurance ---------- {%- endcomment -%}
     {%- for block in section.blocks -%}
       {%- case block.type -%}
+        {%- when 'gallery' -%}
+          <div class="ar-gallery" {{ block.shopify_attributes }}>
+            {%- for i in (1..4) -%}
+              {%- assign key = 'image_' | append: i -%}
+              {%- assign img = block.settings[key] -%}
+              {%- if img != blank -%}
+                {{ img | image_url: width: 1000 | image_tag: loading: 'lazy', alt: product_alt }}
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+
         {%- when 'guarantees' -%}
           <div class="ar-guarantees" {{ block.shopify_attributes }}>
             {%- assign items = block.settings.items | newline_to_br | split: '<br />' -%}
@@ -133,6 +135,7 @@
               {%- endif -%}
             {%- endfor -%}
           </div>
+
         {%- when 'faq' -%}
           <div class="ar-faq" {{ block.shopify_attributes }}>
             {%- if block.settings.title != blank -%}<h2>{{ block.settings.title }}</h2>{%- endif -%}
@@ -144,6 +147,7 @@
               {%- endif -%}
             {%- endfor -%}
           </div>
+
         {%- when 'reviews' -%}
           <div class="ar-reviews" {{ block.shopify_attributes }}>
             {%- assign rv = block.settings.items | newline_to_br | split: '<br />' -%}
@@ -154,68 +158,81 @@
           </div>
       {%- endcase -%}
     {%- endfor -%}
-
-    <a href="#order" class="ar-sticky button button--cta">{{ s.cta_label | default: 'اطلب الآن' }}</a>
   </div>
+
+  <a href="#order" class="ar-sticky button button--cta">{{ s.cta_label | default: 'اطلب الآن' }}</a>
 </section>
 
 {% style %}
-  .ar-offer { direction: rtl; font-family: "Segoe UI", Tahoma, "Noto Sans Arabic", "Noto Naskh Arabic", "Geeza Pro", "Arabic Typesetting", sans-serif; background: var(--color-bg); padding: 1.5rem 0 5rem; }
-  .ar-wrap { max-width: 1100px; margin-inline: auto; padding-inline: 1.25rem; }
-  .ar-flash { background: var(--color-danger); color: #fff; text-align: center; font-weight: 700; padding: .6rem 1rem; border-radius: var(--radius-md); margin-bottom: 1.25rem; }
-  .ar-grid { display: grid; gap: 2rem; grid-template-columns: 1fr; }
-  @media (min-width: 900px) { .ar-grid { grid-template-columns: 1fr 1fr; align-items: start; } }
-  .ar-media__main { width: 100%; border-radius: var(--radius-lg); background: var(--color-card-2); }
-  .ar-thumbs { display: flex; gap: .5rem; margin-top: .75rem; flex-wrap: wrap; }
-  .ar-thumbs img { width: 64px; height: 64px; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--color-line); }
-  .ar-title { font-size: clamp(1.5rem, 4vw, 2.3rem); font-weight: 800; }
-  .ar-sub { color: var(--color-fg-2); margin-top: .5rem; font-size: 1.05rem; }
-  .ar-price { display: flex; align-items: baseline; gap: .75rem; margin: 1rem 0 .25rem; flex-wrap: wrap; }
-  .ar-price__now { font-size: 1.8rem; font-weight: 800; color: var(--color-fg); }
+  .ar-offer { direction: rtl; font-family: "Segoe UI", Tahoma, "Noto Sans Arabic", "Noto Naskh Arabic", "Geeza Pro", "Arabic Typesetting", sans-serif; background: var(--color-bg); color: var(--color-fg); padding-bottom: 5.5rem; }
+  .ar-funnel { max-width: 640px; margin-inline: auto; }
+  .ar-flash { background: var(--color-danger); color: #fff; text-align: center; font-weight: 700; padding: .6rem 1rem; margin: .75rem .75rem 0; border-radius: var(--radius-md); }
+  .ar-hero { position: relative; line-height: 0; }
+  .ar-hero__img { width: 100%; height: auto; display: block; }
+  .ar-hero__cta { position: absolute; display: block; border-radius: 999px; transition: background-color .3s; }
+  .ar-hero__cta:hover { background: rgba(255,255,255,.18); }
+  .ar-card { position: relative; margin: -1.25rem .75rem 0; padding: 1.25rem; background: var(--color-card); border: 1px solid var(--color-line); border-radius: var(--radius-lg); box-shadow: 0 20px 45px -25px rgba(26,20,6,.4); }
+  .ar-card__title { font-size: clamp(1.15rem, 3.5vw, 1.5rem); font-weight: 800; margin-bottom: 1rem; text-align: center; }
+  .ar-price { display: flex; align-items: baseline; justify-content: center; gap: .6rem; flex-wrap: wrap; }
+  .ar-price__now { font-size: 1.7rem; font-weight: 800; }
   .ar-price__old { text-decoration: line-through; color: var(--color-fg-3); font-weight: 600; }
   .ar-price__off { background: var(--color-accent); color: var(--color-accent-contrast); font-weight: 800; padding: .1rem .5rem; border-radius: var(--radius-sm); }
-  .ar-cod { color: #14783f; font-weight: 700; }
-  .ar-benefits { list-style: none; padding: 0; margin: 1.25rem 0; display: grid; gap: .5rem; }
-  .ar-benefits li { position: relative; padding-inline-start: 1.6rem; }
-  .ar-benefits li::before { content: "✔"; position: absolute; inset-inline-start: 0; color: var(--color-accent-2); font-weight: 800; }
-  .ar-form { margin-top: 1.5rem; padding: 1.25rem; border: 1px solid var(--color-line-strong); border-radius: var(--radius-lg); background: var(--color-card); }
-  .ar-form__title { font-size: 1.15rem; font-weight: 800; margin-bottom: 1rem; }
+  .ar-cod { color: #14783f; font-weight: 700; text-align: center; margin-top: .35rem; }
+  .ar-appform { margin-top: 1rem; }
   .ar-label { display: block; font-weight: 700; margin: .9rem 0 .4rem; }
   .ar-opts { display: flex; flex-wrap: wrap; gap: .5rem; }
-  .ar-opts label { padding: .55rem 1rem; border: 1px solid var(--color-line-strong); border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; }
+  .ar-opts label { padding: .55rem 1rem; border: 1px solid var(--color-line-strong); border-radius: var(--radius-sm); cursor: pointer; font-weight: 700; }
   .ar-opts label:has(input:checked) { border-color: var(--color-accent); background: var(--color-accent-soft); }
   .ar-opts input { position: absolute; opacity: 0; }
   .ar-fallback__note { background: #fff7e4; border: 1px solid var(--color-accent-line); border-radius: var(--radius-sm); padding: .6rem .75rem; font-size: .85rem; margin-bottom: .75rem; }
-  .ar-guarantees { display: grid; grid-template-columns: repeat(2, 1fr); gap: .75rem; margin-top: 2.5rem; }
-  @media (min-width: 700px) { .ar-guarantees { grid-template-columns: repeat(4, 1fr); } }
-  .ar-guarantee { background: var(--color-card); border: 1px solid var(--color-line); border-radius: var(--radius-md); padding: .9rem; font-weight: 700; font-size: .9rem; text-align: center; }
-  .ar-guarantee span { display: block; color: var(--color-accent-2); font-size: 1.2rem; margin-bottom: .3rem; }
-  .ar-faq { margin-top: 2.5rem; max-width: 46rem; }
-  .ar-faq h2 { font-size: 1.4rem; font-weight: 800; margin-bottom: 1rem; }
-  .ar-faq details { border-bottom: 1px solid var(--color-line); padding: .85rem 0; }
+  .ar-gallery { display: grid; gap: .75rem; margin: 1.5rem .75rem 0; }
+  .ar-gallery img { width: 100%; border-radius: var(--radius-md); }
+  .ar-guarantees { display: grid; grid-template-columns: repeat(2, 1fr); gap: .6rem; margin: 1.75rem .75rem 0; }
+  .ar-guarantee { background: var(--color-card); border: 1px solid var(--color-line); border-radius: var(--radius-md); padding: .85rem; font-weight: 700; font-size: .85rem; text-align: center; }
+  .ar-guarantee span { display: block; color: var(--color-accent-2); font-size: 1.15rem; margin-bottom: .25rem; }
+  .ar-faq { margin: 1.75rem .75rem 0; }
+  .ar-faq h2 { font-size: 1.3rem; font-weight: 800; margin-bottom: .75rem; text-align: center; }
+  .ar-faq details { border: 1px solid var(--color-line); border-radius: var(--radius-md); padding: .8rem 1rem; margin-bottom: .5rem; background: var(--color-card); }
   .ar-faq summary { font-weight: 700; cursor: pointer; }
   .ar-faq p { color: var(--color-fg-2); margin-top: .5rem; }
-  .ar-reviews { margin-top: 2rem; display: grid; gap: 1rem; }
-  .ar-reviews blockquote { background: var(--color-card); border: 1px solid var(--color-line); border-radius: var(--radius-md); padding: 1rem; margin: 0; }
-  .ar-sticky { position: fixed; inset-inline: 1rem; bottom: 1rem; z-index: 40; display: flex; }
-  @media (min-width: 900px) { .ar-sticky { display: none; } }
+  .ar-reviews { margin: 1.5rem .75rem 0; display: grid; gap: .75rem; }
+  .ar-reviews blockquote { background: var(--color-card); border: 1px solid var(--color-line); border-radius: var(--radius-md); padding: .9rem 1rem; margin: 0; font-size: .92rem; }
+  .ar-sticky { position: fixed; inset-inline: .75rem; bottom: .75rem; z-index: 40; display: flex; box-shadow: 0 12px 30px rgba(245,179,1,.5); }
+  @media (min-width: 700px) { .ar-sticky { display: none; } }
 {% endstyle %}
 
 {% schema %}
 {
   "name": "Page commande arabe (COD)",
   "settings": [
-    { "type": "text", "id": "badge_text", "label": "Bandeau promo (haut)", "default": "عرض خاص — الكمية محدودة" },
-    { "type": "text", "id": "heading", "label": "Titre (ar)", "default": "صباط McQUENNE — جلد فاخر" },
-    { "type": "text", "id": "subheading", "label": "Sous-titre (ar)", "default": "طقم مريح، تصميم راقي، يجي مع أي لباس" },
-    { "type": "text", "id": "cod_text", "label": "Ligne paiement (ar)", "default": "الدفع عند الاستلام — ما تخلّص حتى توصلك" },
-    { "type": "textarea", "id": "benefits", "label": "Avantages (une ligne = un point)", "default": "جلد صناعي أملس، سهل التنظيف\nنعل مطاطي مريح ومضاد للانزلاق\nمقاسات من 39 إلى 44\nتبديل خلال 48 ساعة إذا المقاس ما جاش" },
-    { "type": "text", "id": "form_title", "label": "Titre du formulaire (ar)", "default": "أطلب الآن — عمّر معلوماتك" },
-    { "type": "text", "id": "cta_label", "label": "Texte du bouton (ar)", "default": "اطلب الآن" }
+    { "type": "header", "content": "Maquette (haut de page)" },
+    { "type": "image_picker", "id": "hero_image", "label": "Image maquette publicitaire", "info": "Ex. offre-hero-step-one-navy.webp. À défaut : l'image principale du produit." },
+    { "type": "text", "id": "badge_text", "label": "Bandeau promo (ar)", "default": "عرض خاص — الكمية محدودة" },
+    { "type": "checkbox", "id": "painted_cta", "label": "Zone cliquable sur le bouton peint de la maquette", "default": true },
+    { "type": "range", "id": "cta_x", "min": 0, "max": 90, "step": 1, "unit": "%", "label": "Bouton peint — position depuis la gauche", "default": 39 },
+    { "type": "range", "id": "cta_y", "min": 50, "max": 98, "step": 1, "unit": "%", "label": "Bouton peint — position depuis le haut", "default": 90 },
+    { "type": "range", "id": "cta_w", "min": 5, "max": 80, "step": 1, "unit": "%", "label": "Bouton peint — largeur", "default": 22 },
+    { "type": "range", "id": "cta_h", "min": 2, "max": 30, "step": 1, "unit": "%", "label": "Bouton peint — hauteur", "default": 7 },
+    { "type": "header", "content": "Carte formulaire" },
+    { "type": "text", "id": "form_title", "label": "Titre (ar)", "default": "أطلب الآن — عمّر معلوماتك" },
+    { "type": "text", "id": "cta_label", "label": "Texte du bouton (ar)", "default": "اطلب الآن" },
+    { "type": "checkbox", "id": "show_price", "label": "Afficher le prix (si la maquette ne le montre pas)", "default": false },
+    { "type": "text", "id": "cod_text", "label": "Ligne paiement (ar)", "default": "الدفع عند الاستلام — ما تخلّص حتى توصلك" }
   ],
   "blocks": [
     { "type": "@app" },
     { "type": "text", "name": "Texte libre", "settings": [ { "type": "richtext", "id": "text", "label": "Contenu" } ] },
+    {
+      "type": "gallery",
+      "name": "Images (autres maquettes / détails)",
+      "limit": 1,
+      "settings": [
+        { "type": "image_picker", "id": "image_1", "label": "Image 1" },
+        { "type": "image_picker", "id": "image_2", "label": "Image 2" },
+        { "type": "image_picker", "id": "image_3", "label": "Image 3" },
+        { "type": "image_picker", "id": "image_4", "label": "Image 4" }
+      ]
+    },
     {
       "type": "guarantees",
       "name": "Garanties",
@@ -229,8 +246,8 @@
       "name": "FAQ",
       "limit": 1,
       "settings": [
-        { "type": "text", "id": "title", "label": "Titre", "default": "أسئلة مكررة" },
-        { "type": "textarea", "id": "items", "label": "Format : question :: réponse (une par ligne)", "default": "كيفاش نخلّص؟ :: الدفع عند الاستلام، تخلّص عون التوصيل كي توصلك الطلبية.\nشحال يدوم التوصيل؟ :: من 48 إلى 72 ساعة حسب الولاية.\nوإذا المقاس ما جانيش؟ :: تبدلو خلال 48 ساعة، كليمي علينا." }
+        { "type": "text", "id": "title", "label": "Titre (ar)", "default": "أسئلة مكررة" },
+        { "type": "textarea", "id": "items", "label": "Format : question :: réponse (une par ligne)", "default": "كيفاش نخلّص؟ :: الدفع عند الاستلام، تخلّص عون التوصيل كي توصلك الطلبية في يدك.\nشحال يدوم التوصيل؟ :: من 48 إلى 72 ساعة حسب الولاية. نتصلو بيك بالهاتف قبل الإرسال.\nوإذا المقاس ما جانيش؟ :: تبدلو خلال 48 ساعة، كليمي علينا و نرتّبو معاك.\nواش من مقاس ناخذ؟ :: خوذ مقاسك المعتاد، وإذا كنت متردد خوذ اللي فوق." }
       ]
     },
     {
@@ -238,7 +255,7 @@
       "name": "Avis clients",
       "limit": 1,
       "settings": [
-        { "type": "textarea", "id": "items", "label": "Une ligne = un avis", "default": "سلعة نظيفة و التوصيل سريع، ياسر شكرا\nالمقاس جا مليح و الجلد قوي، ننصح بيه" }
+        { "type": "textarea", "id": "items", "label": "Une ligne = un avis (ar)", "default": "سلعة نظيفة و التوصيل سريع، ياسر شكرا\nالمقاس جا مليح و الجلد قوي، ننصح بيه\nخدمة محترمة، تواصل و تأكيد بالهاتف قبل الإرسال" }
       ]
     }
   ],
