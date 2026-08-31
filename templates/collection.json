@@ -1,0 +1,4 @@
+{
+  "sections": { "main": { "type": "main-collection", "settings": { "per_page": 24, "enable_sorting": true, "show_description": true } } },
+  "order": ["main"]
+}

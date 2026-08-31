@@ -1,0 +1,35 @@
+{%- assign s = section.settings -%}
+<section class="section page-width">
+  <div class="iwt {% if s.layout == 'right' %}iwt--reverse{% endif %} reveal">
+    <div class="iwt__media">
+      {%- if s.image != blank -%}
+        {{ s.image | image_url: width: 1200 | image_tag: loading: 'lazy', alt: s.heading | escape }}
+      {%- else -%}
+        {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder' }}
+      {%- endif -%}
+    </div>
+    <div class="iwt__text">
+      {%- if s.subheading != blank -%}<p class="eyebrow">{{ s.subheading }}</p>{%- endif -%}
+      {%- if s.heading != blank -%}<h2>{{ s.heading }}</h2>{%- endif -%}
+      {%- if s.text != blank -%}<div>{{ s.text }}</div>{%- endif -%}
+      {%- if s.button_label != blank -%}<a href="{{ s.button_link }}" class="button">{{ s.button_label }}</a>{%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:sections.image_with_text.name",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "t:sections.all.image" },
+    { "type": "select", "id": "layout", "label": "t:sections.image_with_text.layout", "default": "left",
+      "options": [{ "value": "left", "label": "Gauche" }, { "value": "right", "label": "Droite" }] },
+    { "type": "text", "id": "subheading", "label": "t:sections.hero.subheading", "default": "Notre engagement" },
+    { "type": "text", "id": "heading", "label": "t:sections.all.heading", "default": "Livré chez vous, payé à la livraison" },
+    { "type": "richtext", "id": "text", "label": "t:sections.all.content", "default": "<p>Commandez en 30 secondes. Vous ne payez qu'à la réception, partout en Algérie.</p>" },
+    { "type": "text", "id": "button_label", "label": "t:sections.all.link_label" },
+    { "type": "url", "id": "button_link", "label": "t:sections.all.link" }
+  ],
+  "presets": [{ "name": "t:sections.image_with_text.name" }]
+}
+{% endschema %}

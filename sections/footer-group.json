@@ -1,0 +1,28 @@
+{
+  "type": "footer",
+  "name": "Footer",
+  "sections": {
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "heading": "Rejoignez EcomDZ",
+        "subtext": "Nouveautés et meilleures offres, une fois par semaine."
+      }
+    },
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "menu": { "type": "menu", "settings": { "heading": "Boutique", "menu": "footer" } },
+        "text": { "type": "text", "settings": { "heading": "Contact", "content": "<p>Alger, Algérie<br>contact@ecomdz.dz</p>" } }
+      },
+      "block_order": ["menu", "text"],
+      "settings": {
+        "tagline": "EcomDZ — la boutique e-commerce moderne et algérienne. Paiement à la livraison.",
+        "show_social": true,
+        "payment_text": "Paiement à la livraison • Livraison 48–72 h partout en Algérie",
+        "copyright": "Tous droits réservés."
+      }
+    }
+  },
+  "order": ["newsletter", "footer"]
+}

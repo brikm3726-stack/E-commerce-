@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "main": {
+      "type": "offer-arabic",
+      "blocks": {
+        "guarantees": { "type": "guarantees", "settings": {} },
+        "faq": { "type": "faq", "settings": {} },
+        "reviews": { "type": "reviews", "settings": {} }
+      },
+      "block_order": ["guarantees", "faq", "reviews"]
+    }
+  },
+  "order": ["main"]
+}

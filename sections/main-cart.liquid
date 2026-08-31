@@ -1,0 +1,54 @@
+<section class="section page-width">
+  <h1 style="margin-bottom:1.5rem">{{ 'sections.cart.title' | t }}</h1>
+
+  {%- if cart.item_count == 0 -%}
+    <p>{{ 'sections.cart.empty' | t }}</p>
+    <p style="margin-top:1rem"><a href="{{ routes.all_products_collection_url }}" class="button">{{ 'sections.cart.continue_shopping' | t }}</a></p>
+  {%- else -%}
+    <form action="{{ routes.cart_url }}" method="post" novalidate class="cart-form">
+      <div style="display:grid;gap:1.25rem">
+        {%- for item in cart.items -%}
+          <div class="line-item" style="grid-template-columns:96px 1fr auto;border-bottom:1px solid var(--color-line);padding-bottom:1.25rem">
+            <a href="{{ item.url }}">
+              {%- if item.image -%}{{ item.image | image_url: width: 200 | image_tag: loading: 'lazy', alt: item.title | escape }}{%- endif -%}
+            </a>
+            <div>
+              <a href="{{ item.url }}" style="font-weight:600">{{ item.product.title }}</a>
+              {%- unless item.variant.title contains 'Default' -%}<div style="color:var(--color-fg-3);font-size:.85rem">{{ item.variant.title }}</div>{%- endunless -%}
+              <div style="margin-top:.5rem">{% render 'price', variant: item.variant %}</div>
+              <div class="qty" style="margin-top:.5rem">
+                <button type="button" data-step="down">&minus;</button>
+                <input type="number" name="updates[]" value="{{ item.quantity }}" min="0" data-line="{{ forloop.index }}">
+                <button type="button" data-step="up">+</button>
+              </div>
+            </div>
+            <div style="text-align:right">
+              <strong>{{ item.final_line_price | money }}</strong>
+              <div><a href="{{ item.url_to_remove }}" style="font-size:.8rem;color:var(--color-danger)">{{ 'sections.cart.remove' | t }}</a></div>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+
+      {%- if settings.cart_show_note -%}
+        <div style="margin-top:1.5rem">
+          <label for="CartNote">{{ 'sections.cart.note' | t }}</label>
+          <textarea id="CartNote" name="note" rows="3">{{ cart.note }}</textarea>
+        </div>
+      {%- endif -%}
+
+      <div class="surface" style="margin-top:2rem;padding:1.5rem;display:grid;gap:1rem;max-width:24rem;margin-left:auto">
+        <div style="display:flex;justify-content:space-between;font-size:1.1rem;font-weight:700">
+          <span>{{ 'sections.cart.subtotal' | t }}</span><span>{{ cart.total_price | money }}</span>
+        </div>
+        <p style="font-size:.8rem;color:var(--color-fg-3)">{{ 'sections.cart.taxes_and_shipping_at_checkout' | t }}</p>
+        <button type="submit" name="update" class="button button--secondary">Mettre à jour</button>
+        <button type="submit" name="checkout" class="button button--cta">{{ 'sections.cart.checkout' | t }}</button>
+      </div>
+    </form>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{ "name": "Panier", "settings": [] }
+{% endschema %}

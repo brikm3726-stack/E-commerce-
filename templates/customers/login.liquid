@@ -1,0 +1,24 @@
+<section class="section page-width" style="max-width:26rem">
+  <h1>{{ 'customer.login_page.title' | t }}</h1>
+  {%- form 'customer_login' -%}
+    {{ form.errors | default_errors }}
+    <label for="cl-email">{{ 'customer.login_page.email' | t }}</label>
+    <input type="email" name="customer[email]" id="cl-email" required>
+    {%- if form.password_needed -%}
+      <label for="cl-pass" style="margin-top:1rem">{{ 'customer.login_page.password' | t }}</label>
+      <input type="password" name="customer[password]" id="cl-pass">
+    {%- endif -%}
+    <button type="submit" class="button" style="width:100%;margin-top:1.25rem">{{ 'customer.login_page.sign_in' | t }}</button>
+  {%- endform -%}
+  <p style="margin-top:1rem"><a href="{{ routes.account_register_url }}" class="link-underline">{{ 'customer.login_page.create_account' | t }}</a></p>
+
+  <div id="recover" style="margin-top:2rem">
+    {%- form 'recover_customer_password' -%}
+      {{ form.errors | default_errors }}
+      {%- if form.posted_successfully? -%}<p class="badge badge--success">E-mail envoye.</p>{%- endif -%}
+      <label for="rec-email">Recuperer le mot de passe</label>
+      <input type="email" name="email" id="rec-email" required>
+      <button type="submit" class="button button--secondary" style="width:100%;margin-top:1rem">Envoyer</button>
+    {%- endform -%}
+  </div>
+</section>

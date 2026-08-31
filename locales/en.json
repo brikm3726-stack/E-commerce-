@@ -1,0 +1,76 @@
+{
+  "accessibility": {
+    "skip_to_content": "Skip to content",
+    "refresh_page": "Choosing a selection results in a full page refresh.",
+    "close": "Close",
+    "menu": "Menu",
+    "cart": "Cart"
+  },
+  "general": {
+    "meta": {
+      "tags": "Tagged \"{{ tags }}\"",
+      "page": "Page {{ page }}"
+    },
+    "search": {
+      "search": "Search",
+      "placeholder": "Search products",
+      "results_with_count": "{{ count }} result for \"{{ terms }}\"",
+      "results_with_count_plural": "{{ count }} results for \"{{ terms }}\"",
+      "no_results": "No results for \"{{ terms }}\"."
+    },
+    "pagination": { "previous": "Previous", "next": "Next" },
+    "newsletter_form": {
+      "email_placeholder": "Your email",
+      "confirmation": "Thanks for subscribing!",
+      "button_label": "Subscribe"
+    },
+    "404": {
+      "title": "Page not found",
+      "subtext": "The page you were looking for does not exist.",
+      "link": "Back to store"
+    }
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Buy now",
+      "sold_out": "Sold out",
+      "unavailable": "Unavailable",
+      "on_sale": "Sale",
+      "from_price_html": "From {{ price }}",
+      "regular_price": "Regular price",
+      "sale_price": "Sale price",
+      "quantity": "Quantity",
+      "save_html": "-{{ percent }}%",
+      "vendor": "Vendor",
+      "description": "Description",
+      "choose_options": "Choose options"
+    },
+    "facets": {
+      "sort_by_label": "Sort by",
+      "filter_button": "Filter",
+      "clear_all": "Clear all",
+      "product_count": "{{ count }} product",
+      "product_count_plural": "{{ count }} products"
+    }
+  },
+  "sections": {
+    "header": { "announcement": "Delivery across Algeria — Cash on delivery" },
+    "cart": {
+      "title": "Your cart",
+      "empty": "Your cart is empty",
+      "continue_shopping": "Continue shopping",
+      "subtotal": "Subtotal",
+      "checkout": "Check out",
+      "note": "Order note",
+      "remove": "Remove",
+      "taxes_and_shipping_at_checkout": "Shipping calculated at checkout."
+    },
+    "featured_collection": { "view_all": "View all" }
+  },
+  "customer": {
+    "login_page": { "title": "Login", "email": "Email", "password": "Password", "sign_in": "Sign in", "create_account": "Create account" },
+    "register": { "title": "Create account", "submit": "Create" },
+    "account": { "title": "My account", "logout": "Log out", "orders": "Orders" }
+  },
+  "blogs": { "article": { "read_more": "Read more", "back_to_blog": "Back to blog" } }
+}

@@ -1,0 +1,39 @@
+{
+  "current": {
+    "color_background": "#fffcf4",
+    "color_card": "#ffffff",
+    "color_text": "#1b1710",
+    "color_accent": "#f5b301",
+    "color_accent_contrast": "#1b1710",
+    "type_heading_font": "archivo_n7",
+    "type_body_font": "assistant_n4",
+    "page_width": 1340,
+    "corner_radius": 13,
+    "logo_width": 120,
+    "phone": "0792 77 93 20",
+    "whatsapp": "213792779320",
+    "social_instagram_link": "https://instagram.com/",
+    "social_facebook_link": "https://facebook.com/",
+    "social_tiktok_link": "https://tiktok.com/",
+    "card_show_vendor": false,
+    "card_show_rating": true,
+    "card_image_ratio": "portrait",
+    "cart_type": "drawer",
+    "cart_show_note": true
+  },
+  "presets": {
+    "EcomDZ": {
+      "color_background": "#fffcf4",
+      "color_card": "#ffffff",
+      "color_text": "#1b1710",
+      "color_accent": "#f5b301",
+      "color_accent_contrast": "#1b1710",
+      "type_heading_font": "archivo_n7",
+      "type_body_font": "assistant_n4",
+      "page_width": 1340,
+      "corner_radius": 13,
+      "card_image_ratio": "portrait",
+      "cart_type": "drawer"
+    }
+  }
+}

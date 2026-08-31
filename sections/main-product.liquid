@@ -1,0 +1,137 @@
+{%- liquid
+  assign product = product
+  assign current_variant = product.selected_or_first_available_variant
+-%}
+<section class="section page-width">
+  <div class="pdp">
+    <div class="pdp__gallery">
+      {%- for media in product.media -%}
+        {{ media | image_url: width: 1200 | image_tag: loading: 'lazy', alt: media.alt | default: product.title | escape }}
+      {%- else -%}
+        {{ 'product-1' | placeholder_svg_tag: 'placeholder' }}
+      {%- endfor -%}
+    </div>
+
+    <div class="pdp__info">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'vendor' -%}
+            {%- if product.vendor != blank -%}<p class="card__vendor" {{ block.shopify_attributes }}>{{ product.vendor }}</p>{%- endif -%}
+
+          {%- when 'title' -%}
+            <h1 class="pdp__title" {{ block.shopify_attributes }}>{{ product.title }}</h1>
+
+          {%- when 'rating' -%}
+            {%- if product.metafields.reviews.rating.value != blank -%}
+              <div class="card__rating" {{ block.shopify_attributes }}>★ {{ product.metafields.reviews.rating.value }} · {{ product.metafields.reviews.rating_count.value }} avis</div>
+            {%- endif -%}
+
+          {%- when 'price' -%}
+            <div class="pdp__price" {{ block.shopify_attributes }}>
+              <span data-pdp-price>{{ current_variant.price | money }}</span>
+              {%- if current_variant.compare_at_price > current_variant.price -%}
+                <s class="price__compare">{{ current_variant.compare_at_price | money }}</s>
+                {%- assign pct = current_variant.compare_at_price | minus: current_variant.price | times: 100.0 | divided_by: current_variant.compare_at_price | round -%}
+                <span class="badge badge--danger">-{{ pct }}%</span>
+              {%- endif -%}
+            </div>
+
+          {%- when 'form' -%}
+            <div {{ block.shopify_attributes }}>
+              <script type="application/json" data-product-json>{{ product | json }}</script>
+              {%- form 'product', product, data-product-form: 'true', class: 'pdp__form' -%}
+                <input type="hidden" name="id" value="{{ current_variant.id }}">
+
+                {%- unless product.has_only_default_variant -%}
+                  {%- for option in product.options_with_values -%}
+                    <div class="option">
+                      <label>{{ option.name }}</label>
+                      <div class="option__values">
+                        {%- for value in option.values -%}
+                          {%- assign oid = 'opt-' | append: forloop.parentloop.index | append: '-' | append: forloop.index -%}
+                          <label for="{{ oid }}">
+                            <input type="radio" id="{{ oid }}" name="{{ option.name }}" value="{{ value | escape }}"
+                              data-option-index="{{ forloop.parentloop.index0 }}"
+                              {% if option.selected_value == value %}checked{% endif %}>
+                            {{ value }}
+                          </label>
+                        {%- endfor -%}
+                      </div>
+                    </div>
+                  {%- endfor -%}
+                {%- endunless -%}
+
+                {%- if block.settings.show_quantity -%}
+                  <div class="option">
+                    <label>{{ 'products.product.quantity' | t }}</label>
+                    <div class="qty">
+                      <button type="button" data-step="down" aria-label="-">&minus;</button>
+                      <input type="number" name="quantity" value="1" min="1" inputmode="numeric">
+                      <button type="button" data-step="up" aria-label="+">+</button>
+                    </div>
+                  </div>
+                {%- endif -%}
+
+                <button type="submit" class="button button--cta"
+                  data-label-add="{{ 'products.product.add_to_cart' | t }}"
+                  data-label-soldout="{{ 'products.product.sold_out' | t }}"
+                  {% unless current_variant.available %}disabled{% endunless %}>
+                  {%- if current_variant.available -%}{{ 'products.product.add_to_cart' | t }}{%- else -%}{{ 'products.product.sold_out' | t }}{%- endif -%}
+                </button>
+
+                {{ form | payment_button }}
+              {%- endform -%}
+            </div>
+
+          {%- when 'highlights' -%}
+            {%- assign hl = product.metafields.custom.highlights.value -%}
+            {%- if hl != blank -%}
+              <ul class="pdp__description" {{ block.shopify_attributes }}>
+                {%- for item in hl -%}<li>{{ item }}</li>{%- endfor -%}
+              </ul>
+            {%- endif -%}
+
+          {%- when 'description' -%}
+            <div class="pdp__description rte" {{ block.shopify_attributes }}>{{ product.description }}</div>
+
+          {%- when 'text' -%}
+            <div {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
+
+          {%- when '@app' -%}
+            <div {{ block.shopify_attributes }}>{% render block %}</div>
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:sections.main_product.name",
+  "blocks": [
+    { "type": "vendor", "name": "Marque", "limit": 1 },
+    { "type": "title", "name": "Titre", "limit": 1 },
+    { "type": "rating", "name": "Note", "limit": 1 },
+    { "type": "price", "name": "Prix", "limit": 1 },
+    { "type": "form", "name": "Formulaire d'achat", "limit": 1, "settings": [
+      { "type": "checkbox", "id": "show_quantity", "label": "Afficher le sélecteur de quantité", "default": true }
+    ] },
+    { "type": "highlights", "name": "Points forts (metafield custom.highlights)", "limit": 1 },
+    { "type": "description", "name": "Description", "limit": 1 },
+    { "type": "text", "name": "Texte libre", "settings": [{ "type": "richtext", "id": "text", "label": "t:sections.all.content" }] },
+    { "type": "@app" }
+  ],
+  "settings": [],
+  "default": {
+    "blocks": [
+      { "type": "vendor" },
+      { "type": "title" },
+      { "type": "rating" },
+      { "type": "price" },
+      { "type": "form" },
+      { "type": "highlights" },
+      { "type": "description" }
+    ]
+  }
+}
+{% endschema %}

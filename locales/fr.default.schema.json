@@ -1,0 +1,82 @@
+{
+  "settings_schema": {
+    "colors": {
+      "name": "Couleurs",
+      "background": "Fond de page",
+      "card": "Fond des cartes",
+      "text": "Texte",
+      "accent": "Accent (jaune EcomDZ)",
+      "accent_contrast": "Texte sur accent"
+    },
+    "typography": {
+      "name": "Typographie",
+      "heading_font": "Police des titres",
+      "body_font": "Police du texte"
+    },
+    "layout": {
+      "name": "Mise en page",
+      "page_width": "Largeur de page",
+      "corner_radius": "Arrondi des coins"
+    },
+    "brand": {
+      "name": "Marque",
+      "logo": "Logo",
+      "logo_width": "Largeur du logo",
+      "favicon": "Favicon"
+    },
+    "social": {
+      "name": "Réseaux & contact",
+      "phone": "Téléphone",
+      "whatsapp": "WhatsApp (format international)"
+    },
+    "product_card": {
+      "name": "Cartes produit",
+      "show_vendor": "Afficher la marque",
+      "show_rating": "Afficher la note",
+      "image_ratio": "Format de l'image"
+    },
+    "cart": {
+      "name": "Panier",
+      "type": "Type de panier",
+      "show_note": "Autoriser une note de commande"
+    }
+  },
+  "sections": {
+    "all": {
+      "padding": { "section_padding_heading": "Marges de la section", "padding_top": "Marge haute", "padding_bottom": "Marge basse" },
+      "colors": { "label": "Schéma de couleurs" },
+      "heading": "Titre",
+      "content": "Contenu",
+      "image": "Image",
+      "link": "Lien",
+      "link_label": "Texte du bouton"
+    },
+    "header": {
+      "name": "En-tête",
+      "menu": "Menu",
+      "sticky": "En-tête fixe au défilement"
+    },
+    "footer": {
+      "name": "Pied de page",
+      "show_social": "Afficher les réseaux sociaux",
+      "payment_text": "Texte de réassurance"
+    },
+    "announcement": { "name": "Bandeau d'annonce", "text": "Texte" },
+    "hero": {
+      "name": "Bannière héro",
+      "subheading": "Sur-titre",
+      "desktop_image": "Image bureau",
+      "mobile_image": "Image mobile",
+      "overlay": "Opacité du voile"
+    },
+    "category_grid": { "name": "Grille de catégories", "collection": "Collection" },
+    "marquee": { "name": "Bandeau défilant", "text": "Texte répété", "speed": "Vitesse" },
+    "featured_collection": { "name": "Collection en vedette", "products_to_show": "Nombre de produits" },
+    "rich_text": { "name": "Texte enrichi" },
+    "image_with_text": { "name": "Image avec texte", "layout": "Position de l'image" },
+    "newsletter": { "name": "Newsletter" },
+    "main_product": { "name": "Fiche produit", "show_highlights": "Afficher les points forts (metafield)" },
+    "main_collection": { "name": "Page collection" },
+    "collection_list": { "name": "Liste des collections" }
+  }
+}

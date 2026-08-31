@@ -1,0 +1,24 @@
+<section class="section page-width">
+  <div class="section-header reveal"><h1>{{ section.settings.heading | default: 'Collections' }}</h1></div>
+  <div class="cat-grid">
+    {%- for collection in collections -%}
+      <a href="{{ collection.url }}" class="cat-card reveal">
+        {%- if collection.featured_image -%}
+          {{ collection.featured_image | image_url: width: 900 | image_tag: loading: 'lazy', alt: collection.title | escape }}
+        {%- else -%}
+          {{ 'collection-1' | placeholder_svg_tag: 'placeholder' }}
+        {%- endif -%}
+        <span class="cat-card__label">{{ collection.title }}</span>
+      </a>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:sections.collection_list.name",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "t:sections.all.heading", "default": "Toutes les collections" }
+  ]
+}
+{% endschema %}

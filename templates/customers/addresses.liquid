@@ -1,0 +1,34 @@
+<section class="section page-width" style="max-width:40rem">
+  <h1>Mes adresses</h1>
+  <p style="margin-top:1rem"><a href="{{ routes.account_url }}" class="link-underline">Retour au compte</a></p>
+  {%- paginate customer.addresses by 5 -%}
+    {%- for address in customer.addresses -%}
+      <div class="surface" style="padding:1.25rem;margin-top:1rem">
+        {{ address | format_address }}
+        {%- form 'customer_address', address -%}
+          <div style="margin-top:1rem;display:grid;gap:.75rem">
+            <input type="text" name="address[first_name]" value="{{ address.first_name }}" placeholder="Prenom">
+            <input type="text" name="address[last_name]" value="{{ address.last_name }}" placeholder="Nom">
+            <input type="text" name="address[address1]" value="{{ address.address1 }}" placeholder="Adresse">
+            <input type="text" name="address[city]" value="{{ address.city }}" placeholder="Ville">
+            <input type="text" name="address[phone]" value="{{ address.phone }}" placeholder="Telephone">
+            <button type="submit" class="button button--secondary">Enregistrer</button>
+          </div>
+        {%- endform -%}
+      </div>
+    {%- endfor -%}
+    {% render 'pagination', paginate: paginate %}
+  {%- endpaginate -%}
+
+  <h2 style="margin-top:2rem">Nouvelle adresse</h2>
+  {%- form 'customer_address', customer.new_address -%}
+    <div style="display:grid;gap:.75rem;margin-top:1rem">
+      <input type="text" name="address[first_name]" placeholder="Prenom">
+      <input type="text" name="address[last_name]" placeholder="Nom">
+      <input type="text" name="address[address1]" placeholder="Adresse">
+      <input type="text" name="address[city]" placeholder="Ville">
+      <input type="text" name="address[phone]" placeholder="Telephone">
+      <button type="submit" class="button">Ajouter</button>
+    </div>
+  {%- endform -%}
+</section>
