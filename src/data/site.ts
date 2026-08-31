@@ -37,6 +37,19 @@ export const SITE = {
  */
 export const WEB3FORMS_KEY = "2d63f702-d3aa-484b-8699-575c241c7120";
 
+/**
+ * URL du Worker Cloudflare qui crée la commande dans Shopify (voir `worker/`).
+ *
+ * Tant que cette constante est vide, rien ne change : la commande part
+ * uniquement par e-mail (Web3Forms). Dès qu'elle contient l'URL du Worker,
+ * chaque commande de la page /offre crée aussi une vraie commande Shopify
+ * (paiement à la livraison), EN PLUS de l'e-mail — double filet de sécurité.
+ *
+ * Cette URL est publique par conception (le navigateur l'appelle) ; le jeton
+ * Shopify, lui, reste côté Worker et n'apparaît jamais ici.
+ */
+export const SHOPIFY_ORDER_ENDPOINT = "";
+
 export const SHIPPING = {
   /** livraison à domicile */
   domicile: 600,

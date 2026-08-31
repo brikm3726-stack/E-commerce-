@@ -1,0 +1,13 @@
+{
+  "name": "ecomdz-shopify-order-worker",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Pont commande /offre -> Shopify Admin API (Cloudflare Worker)",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^3.90.0"
+  }
+}

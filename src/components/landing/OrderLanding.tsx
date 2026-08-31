@@ -17,6 +17,7 @@ import { SITE } from "@/data/site";
 import { noestRate } from "@/data/shipping-noest";
 import { isValidPhone, normalizePhone, orderReference } from "@/lib/format";
 import { notifyOrder, type NotifyResult } from "@/lib/notify";
+import { createShopifyOrder } from "@/lib/shopify-order";
 import type { Order, Product } from "@/lib/types";
 
 /**
@@ -222,12 +223,15 @@ export function OrderLanding({ products }: { products: Product[] }) {
     // L'e-mail part en arrière-plan : on n'attend PAS le réseau pour afficher
     // la confirmation. Faire patienter quelqu'un devant un écran figé, sur un
     // tunnel Facebook Ads, c'est la commande perdue.
-    void notifyOrder(
-      built,
-      offNetwork
-        ? `Page pub arabe — HORS RESEAU NOEST (${wilaya}), acheminement a organiser`
-        : "Page pub arabe",
-    ).then(setNotified);
+    const source = offNetwork
+      ? `Page pub arabe — HORS RESEAU NOEST (${wilaya}), acheminement a organiser`
+      : "Page pub arabe";
+
+    void notifyOrder(built, source).then(setNotified);
+
+    // Crée aussi la commande dans Shopify si le pont est configuré
+    // (SHOPIFY_ORDER_ENDPOINT). Sans configuration : ne fait rien.
+    void createShopifyOrder(built, source);
 
     // court délai, juste pour que le bouton montre son état de chargement
     await new Promise((r) => setTimeout(r, 500));
