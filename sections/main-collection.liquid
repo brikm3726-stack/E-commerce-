@@ -1,0 +1,46 @@
+{%- paginate collection.products by section.settings.per_page -%}
+<section class="section page-width">
+  <div class="section-header reveal" style="text-align:left;margin-left:0">
+    <h1>{{ collection.title }}</h1>
+    {%- if collection.description != blank and section.settings.show_description -%}
+      <p>{{ collection.description }}</p>
+    {%- endif -%}
+  </div>
+
+  <div class="collection-toolbar">
+    <span>{{ 'products.facets.product_count' | t: count: collection.products_count }}</span>
+    {%- if section.settings.enable_sorting -%}
+      <form class="facets" method="get">
+        <label for="SortBy">{{ 'products.facets.sort_by_label' | t }}</label>
+        <select name="sort_by" id="SortBy" onchange="this.form.submit()">
+          {%- assign current = collection.sort_by | default: collection.default_sort_by -%}
+          {%- for opt in collection.sort_options -%}
+            <option value="{{ opt.value }}" {% if opt.value == current %}selected{% endif %}>{{ opt.name }}</option>
+          {%- endfor -%}
+        </select>
+      </form>
+    {%- endif -%}
+  </div>
+
+  <div class="product-grid product-grid--4">
+    {%- for product in collection.products -%}
+      {% render 'product-card', product: product %}
+    {%- else -%}
+      <p>Aucun produit dans cette collection pour le moment.</p>
+    {%- endfor -%}
+  </div>
+
+  {% render 'pagination', paginate: paginate %}
+</section>
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "t:sections.main_collection.name",
+  "settings": [
+    { "type": "checkbox", "id": "show_description", "label": "Afficher la description", "default": true },
+    { "type": "checkbox", "id": "enable_sorting", "label": "Activer le tri", "default": true },
+    { "type": "range", "id": "per_page", "min": 8, "max": 48, "step": 4, "label": "Produits par page", "default": 24 }
+  ]
+}
+{% endschema %}

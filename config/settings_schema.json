@@ -1,0 +1,78 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "EcomDZ",
+    "theme_version": "1.0.0",
+    "theme_author": "brikm3726",
+    "theme_documentation_url": "https://github.com/brikm3726-stack/E-commerce-",
+    "theme_support_url": "https://github.com/brikm3726-stack/E-commerce-/issues"
+  },
+  {
+    "name": "t:settings_schema.colors.name",
+    "settings": [
+      { "type": "color", "id": "color_background", "label": "t:settings_schema.colors.background", "default": "#fffcf4" },
+      { "type": "color", "id": "color_card", "label": "t:settings_schema.colors.card", "default": "#ffffff" },
+      { "type": "color", "id": "color_text", "label": "t:settings_schema.colors.text", "default": "#1b1710" },
+      { "type": "color", "id": "color_accent", "label": "t:settings_schema.colors.accent", "default": "#f5b301" },
+      { "type": "color", "id": "color_accent_contrast", "label": "t:settings_schema.colors.accent_contrast", "default": "#1b1710" }
+    ]
+  },
+  {
+    "name": "t:settings_schema.typography.name",
+    "settings": [
+      { "type": "font_picker", "id": "type_heading_font", "label": "t:settings_schema.typography.heading_font", "default": "archivo_n7" },
+      { "type": "font_picker", "id": "type_body_font", "label": "t:settings_schema.typography.body_font", "default": "assistant_n4" }
+    ]
+  },
+  {
+    "name": "t:settings_schema.layout.name",
+    "settings": [
+      { "type": "range", "id": "page_width", "min": 1000, "max": 1600, "step": 20, "unit": "px", "label": "t:settings_schema.layout.page_width", "default": 1340 },
+      { "type": "range", "id": "corner_radius", "min": 0, "max": 24, "step": 1, "unit": "px", "label": "t:settings_schema.layout.corner_radius", "default": 13 }
+    ]
+  },
+  {
+    "name": "t:settings_schema.brand.name",
+    "settings": [
+      { "type": "image_picker", "id": "logo", "label": "t:settings_schema.brand.logo" },
+      { "type": "range", "id": "logo_width", "min": 60, "max": 240, "step": 10, "unit": "px", "label": "t:settings_schema.brand.logo_width", "default": 120 },
+      { "type": "image_picker", "id": "favicon", "label": "t:settings_schema.brand.favicon" }
+    ]
+  },
+  {
+    "name": "t:settings_schema.social.name",
+    "settings": [
+      { "type": "text", "id": "social_instagram_link", "label": "Instagram", "info": "https://instagram.com/shop" },
+      { "type": "text", "id": "social_facebook_link", "label": "Facebook" },
+      { "type": "text", "id": "social_tiktok_link", "label": "TikTok" },
+      { "type": "text", "id": "phone", "label": "t:settings_schema.social.phone", "default": "0792 77 93 20" },
+      { "type": "text", "id": "whatsapp", "label": "t:settings_schema.social.whatsapp", "default": "213792779320" }
+    ]
+  },
+  {
+    "name": "t:settings_schema.product_card.name",
+    "settings": [
+      { "type": "checkbox", "id": "card_show_vendor", "label": "t:settings_schema.product_card.show_vendor", "default": false },
+      { "type": "checkbox", "id": "card_show_rating", "label": "t:settings_schema.product_card.show_rating", "default": true },
+      { "type": "select", "id": "card_image_ratio", "label": "t:settings_schema.product_card.image_ratio", "default": "portrait",
+        "options": [
+          { "value": "adapt", "label": "Adapt" },
+          { "value": "portrait", "label": "Portrait" },
+          { "value": "square", "label": "Square" }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "t:settings_schema.cart.name",
+    "settings": [
+      { "type": "select", "id": "cart_type", "label": "t:settings_schema.cart.type", "default": "drawer",
+        "options": [
+          { "value": "drawer", "label": "Drawer" },
+          { "value": "page", "label": "Page" }
+        ]
+      },
+      { "type": "checkbox", "id": "cart_show_note", "label": "t:settings_schema.cart.show_note", "default": true }
+    ]
+  }
+]

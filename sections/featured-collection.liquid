@@ -1,0 +1,42 @@
+{%- liquid
+  assign col = section.settings.collection
+  assign limit = section.settings.products_to_show
+-%}
+<section class="section page-width">
+  <div class="section-header reveal">
+    {%- if section.settings.subheading != blank -%}<p class="eyebrow">{{ section.settings.subheading }}</p>{%- endif -%}
+    <h2>{{ section.settings.heading | default: col.title }}</h2>
+    {%- if section.settings.description != blank -%}<p>{{ section.settings.description }}</p>{%- endif -%}
+  </div>
+
+  <div class="product-grid {% if limit >= 4 %}product-grid--4{% endif %}">
+    {%- for product in col.products limit: limit -%}
+      {% render 'product-card', product: product %}
+    {%- else -%}
+      {%- for i in (1..limit) -%}
+        <article class="card"><div class="card__media">{{ 'product-1' | placeholder_svg_tag: 'placeholder' }}</div></article>
+      {%- endfor -%}
+    {%- endfor -%}
+  </div>
+
+  {%- if col != blank and section.settings.show_view_all -%}
+    <div style="text-align:center;margin-top:2rem">
+      <a href="{{ col.url }}" class="button button--secondary">{{ 'sections.featured_collection.view_all' | t }}</a>
+    </div>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "t:sections.featured_collection.name",
+  "settings": [
+    { "type": "collection", "id": "collection", "label": "t:sections.category_grid.collection" },
+    { "type": "text", "id": "subheading", "label": "t:sections.hero.subheading", "default": "Sélection" },
+    { "type": "text", "id": "heading", "label": "t:sections.all.heading", "default": "Nos meilleures ventes" },
+    { "type": "textarea", "id": "description", "label": "t:sections.all.content" },
+    { "type": "range", "id": "products_to_show", "min": 2, "max": 12, "step": 1, "label": "t:sections.featured_collection.products_to_show", "default": 4 },
+    { "type": "checkbox", "id": "show_view_all", "label": "Bouton « Voir tout »", "default": true }
+  ],
+  "presets": [{ "name": "t:sections.featured_collection.name" }]
+}
+{% endschema %}

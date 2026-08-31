@@ -1,0 +1,15 @@
+<div class="marquee" style="--marquee-speed: {{ section.settings.speed | default: 24 }}s">
+  <div class="marquee__track" aria-hidden="true">
+    {%- assign text = section.settings.text | default: 'sections.header.announcement' | t -%}
+    {%- for i in (1..8) -%}<span>{{ text }}</span>{%- endfor -%}
+  </div>
+</div>
+{% schema %}
+{
+  "name": "t:sections.announcement.name",
+  "settings": [
+    { "type": "text", "id": "text", "label": "t:sections.announcement.text", "default": "Livraison partout en Algérie — Paiement à la livraison" },
+    { "type": "range", "id": "speed", "min": 10, "max": 60, "step": 2, "unit": "s", "label": "t:sections.marquee.speed", "default": 24 }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,23 @@
+{% layout none %}
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ 'gift_cards.issued.title' | t: value: gift_card.initial_value | money, shop: shop.name }}</title>
+    {{ 'theme.css' | asset_url | stylesheet_tag }}
+    <style>body{display:grid;place-content:center;min-height:100vh;text-align:center;padding:2rem}</style>
+  </head>
+  <body>
+    <main class="page-width" style="max-width:26rem">
+      <div class="header__logo" style="font-size:1.5rem">{{ shop.name }}</div>
+      <h1 style="margin-top:1rem">{{ gift_card.balance | money }}</h1>
+      <p style="color:var(--color-fg-2)">Carte cadeau</p>
+      <div class="surface" style="padding:1.5rem;margin:1.5rem 0">
+        <img src="{{ gift_card | img_url: 'medium' }}" alt="" style="margin:0 auto">
+        <p style="font-family:monospace;letter-spacing:.15em;margin-top:1rem">{{ gift_card.code | format_code }}</p>
+      </div>
+      <a href="{{ shop.url }}" class="button">Utiliser en boutique</a>
+    </main>
+  </body>
+</html>

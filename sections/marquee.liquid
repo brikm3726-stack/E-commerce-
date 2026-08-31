@@ -1,0 +1,16 @@
+<div class="marquee" style="--marquee-speed: {{ section.settings.speed }}s; {% if section.settings.invert %}background:var(--color-fg);color:var(--color-bg);{% endif %}">
+  <div class="marquee__track" aria-hidden="true">
+    {%- for i in (1..10) -%}<span>{{ section.settings.text }}</span>{%- endfor -%}
+  </div>
+</div>
+{% schema %}
+{
+  "name": "t:sections.marquee.name",
+  "settings": [
+    { "type": "text", "id": "text", "label": "t:sections.marquee.text", "default": "PAIEMENT À LA LIVRAISON · NOUVEAUTÉS CHAQUE SEMAINE · LIVRAISON 58 WILAYAS" },
+    { "type": "range", "id": "speed", "min": 10, "max": 60, "step": 2, "unit": "s", "label": "t:sections.marquee.speed", "default": 26 },
+    { "type": "checkbox", "id": "invert", "label": "Couleurs inversées", "default": false }
+  ],
+  "presets": [{ "name": "t:sections.marquee.name" }]
+}
+{% endschema %}

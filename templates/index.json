@@ -1,0 +1,60 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "subheading": "Nouvelle collection",
+        "heading": "Le shopping qui vous ressemble",
+        "text": "Produits tendance livrés partout en Algérie. Paiement à la livraison.",
+        "button_label": "Découvrir la boutique",
+        "overlay": 35,
+        "light_text": true
+      }
+    },
+    "marquee": {
+      "type": "marquee",
+      "settings": {
+        "text": "PAIEMENT À LA LIVRAISON · NOUVEAUTÉS CHAQUE SEMAINE · LIVRAISON 58 WILAYAS",
+        "speed": 26
+      }
+    },
+    "categories": {
+      "type": "category-grid",
+      "settings": { "subheading": "Explorer", "heading": "Nos catégories" },
+      "blocks": {
+        "c1": { "type": "category", "settings": { "title": "Sneakers" } },
+        "c2": { "type": "category", "settings": { "title": "Vêtements" } },
+        "c3": { "type": "category", "settings": { "title": "Accessoires" } }
+      },
+      "block_order": ["c1", "c2", "c3"]
+    },
+    "featured": {
+      "type": "featured-collection",
+      "settings": {
+        "subheading": "Sélection",
+        "heading": "Nos meilleures ventes",
+        "products_to_show": 4,
+        "show_view_all": true
+      }
+    },
+    "image_with_text": {
+      "type": "image-with-text",
+      "settings": {
+        "layout": "left",
+        "subheading": "Notre engagement",
+        "heading": "Livré chez vous, payé à la livraison",
+        "text": "<p>Commandez en 30 secondes. Vous ne payez qu'à la réception, partout en Algérie.</p>"
+      }
+    },
+    "rich_text": {
+      "type": "rich-text",
+      "blocks": {
+        "e": { "type": "eyebrow", "settings": { "text": "À propos" } },
+        "h": { "type": "heading", "settings": { "text": "Une paire à la fois" } },
+        "t": { "type": "text", "settings": { "text": "<p>Chaque produit est sélectionné à l'unité, contrôlé, puis mis en ligne. Pas de surstock, pas de promesse en l'air.</p>" } }
+      },
+      "block_order": ["e", "h", "t"]
+    }
+  },
+  "order": ["hero", "marquee", "categories", "featured", "image_with_text", "rich_text"]
+}

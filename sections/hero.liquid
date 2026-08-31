@@ -1,0 +1,44 @@
+{%- liquid
+  assign s = section.settings
+-%}
+<section class="hero {% if s.light_text == false %}hero--light{% endif %}" style="--hero-overlay: {{ s.overlay | divided_by: 100.0 }}">
+  <div class="hero__media">
+    {%- if s.image_mobile != blank -%}
+      <picture>
+        <source media="(max-width: 749px)" srcset="{{ s.image_mobile | image_url: width: 900 }}">
+        <img src="{{ s.image | image_url: width: 2000 }}" alt="{{ s.image.alt | default: shop.name | escape }}" loading="eager" fetchpriority="high">
+      </picture>
+    {%- elsif s.image != blank -%}
+      <img src="{{ s.image | image_url: width: 2000 }}" alt="{{ s.image.alt | default: shop.name | escape }}" loading="eager" fetchpriority="high">
+    {%- else -%}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder' }}
+    {%- endif -%}
+  </div>
+  {%- if s.image != blank -%}<div class="hero__overlay"></div>{%- endif -%}
+  <div class="hero__content">
+    {%- if s.subheading != blank -%}<p class="eyebrow" style="color:inherit;opacity:.85">{{ s.subheading }}</p>{%- endif -%}
+    {%- if s.heading != blank -%}<h1>{{ s.heading }}</h1>{%- endif -%}
+    {%- if s.text != blank -%}<p>{{ s.text }}</p>{%- endif -%}
+    {%- if s.button_label != blank -%}
+      <a href="{{ s.button_link | default: routes.all_products_collection_url }}" class="button button--cta">{{ s.button_label }}</a>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:sections.hero.name",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "t:sections.hero.desktop_image" },
+    { "type": "image_picker", "id": "image_mobile", "label": "t:sections.hero.mobile_image" },
+    { "type": "text", "id": "subheading", "label": "t:sections.hero.subheading", "default": "Nouvelle collection" },
+    { "type": "text", "id": "heading", "label": "t:sections.all.heading", "default": "Le shopping qui vous ressemble" },
+    { "type": "textarea", "id": "text", "label": "t:sections.all.content", "default": "Produits tendance livrés partout en Algérie. Paiement à la livraison." },
+    { "type": "text", "id": "button_label", "label": "t:sections.all.link_label", "default": "Découvrir la boutique" },
+    { "type": "url", "id": "button_link", "label": "t:sections.all.link" },
+    { "type": "checkbox", "id": "light_text", "label": "Texte clair", "default": true },
+    { "type": "range", "id": "overlay", "min": 0, "max": 80, "step": 5, "unit": "%", "label": "t:sections.hero.overlay", "default": 35 }
+  ],
+  "presets": [{ "name": "t:sections.hero.name" }]
+}
+{% endschema %}

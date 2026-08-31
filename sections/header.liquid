@@ -1,0 +1,93 @@
+{%- liquid
+  assign menu = section.settings.menu
+-%}
+<header class="header {% if section.settings.sticky %}header--sticky{% endif %} {% if section.settings.glass %}glass{% endif %}">
+  <div class="header__inner">
+    <button class="header__icon header__burger" data-menu-open aria-label="{{ 'accessibility.menu' | t }}">
+      {% render 'icon', name: 'menu' %}
+    </button>
+
+    <a href="{{ routes.root_url }}" class="header__logo">
+      {%- if settings.logo != blank -%}
+        {%- assign logo_style = 'width:' | append: settings.logo_width | append: 'px' -%}
+        {{ settings.logo | image_url: width: 300 | image_tag: widths: '120,240,300', style: logo_style, alt: shop.name | escape }}
+      {%- else -%}
+        {{ shop.name }}
+      {%- endif -%}
+    </a>
+
+    <nav class="header__nav">
+      {%- for link in linklists[menu].links -%}
+        <a href="{{ link.url }}">{{ link.title }}</a>
+      {%- endfor -%}
+    </nav>
+
+    <div class="header__actions">
+      <a href="{{ routes.search_url }}" class="header__icon" aria-label="{{ 'general.search.search' | t }}">
+        {% render 'icon', name: 'search' %}
+      </a>
+      {%- if shop.customer_accounts_enabled -%}
+        <a href="{{ routes.account_url }}" class="header__icon" aria-label="{{ 'customer.account.title' | t }}">
+          {% render 'icon', name: 'user' %}
+        </a>
+      {%- endif -%}
+      <a href="{{ routes.cart_url }}" class="header__icon" data-cart-open aria-label="{{ 'accessibility.cart' | t }}">
+        {% render 'icon', name: 'cart' %}
+        <span class="cart-count" {% if cart.item_count == 0 %}hidden{% endif %}>{{ cart.item_count }}</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+{%- comment -%} ---------- Menu mobile (porté de MobileMenu.tsx) ---------- {%- endcomment -%}
+<div class="mobile-menu" id="MobileMenu">
+  <button class="header__icon mobile-menu__close" data-menu-close aria-label="{{ 'accessibility.close' | t }}">
+    {% render 'icon', name: 'close' %}
+  </button>
+  {%- for link in linklists[menu].links -%}
+    <a href="{{ link.url }}" data-menu-close>{{ link.title }}</a>
+  {%- endfor -%}
+</div>
+
+{%- comment -%} ---------- Panier latéral (porté de CartDrawer.tsx) ---------- {%- endcomment -%}
+{%- if settings.cart_type == 'drawer' -%}
+  <div class="drawer" id="CartDrawer" data-empty-text="{{ 'sections.cart.empty' | t }}">
+    <div class="drawer__overlay" data-cart-close></div>
+    <aside class="drawer__panel" aria-label="{{ 'sections.cart.title' | t }}">
+      <div class="drawer__head">
+        <strong>{{ 'sections.cart.title' | t }}</strong>
+        <button class="header__icon" data-cart-close aria-label="{{ 'accessibility.close' | t }}">{% render 'icon', name: 'close' %}</button>
+      </div>
+      <div class="drawer__items"></div>
+      <div class="drawer__foot">
+        <div style="display:flex;justify-content:space-between;font-weight:700">
+          <span>{{ 'sections.cart.subtotal' | t }}</span>
+          <span data-cart-subtotal>{{ cart.total_price | money }}</span>
+        </div>
+        <p style="font-size:.8rem;color:var(--color-fg-3)">{{ 'sections.cart.taxes_and_shipping_at_checkout' | t }}</p>
+        <form action="{{ routes.cart_url }}" method="post">
+          <button type="submit" name="checkout" class="button" style="width:100%">{{ 'sections.cart.checkout' | t }}</button>
+        </form>
+        <a href="{{ routes.cart_url }}" class="button button--ghost" style="width:100%">{{ 'sections.cart.title' | t }}</a>
+      </div>
+    </aside>
+  </div>
+{%- else -%}
+  <script>document.body.classList.add('cart-drawer-disabled');</script>
+{%- endif -%}
+
+<script>
+  window.themeMoneyFormat = {{ shop.money_format | json }};
+</script>
+
+{% schema %}
+{
+  "name": "t:sections.header.name",
+  "class": "section-header-wrapper",
+  "settings": [
+    { "type": "link_list", "id": "menu", "label": "t:sections.header.menu", "default": "main-menu" },
+    { "type": "checkbox", "id": "sticky", "label": "t:sections.header.sticky", "default": true },
+    { "type": "checkbox", "id": "glass", "label": "Fond translucide (verre)", "default": true }
+  ]
+}
+{% endschema %}

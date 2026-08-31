@@ -1,0 +1,31 @@
+{%- comment -%}
+  Affichage de prix. Params : product (pour une carte) OU variant (fiche/panier).
+{%- endcomment -%}
+{%- liquid
+  if variant
+    assign money_price = variant.price
+    assign money_compare = variant.compare_at_price
+    assign varies = false
+  elsif product
+    assign money_price = product.price
+    assign money_compare = product.compare_at_price
+    assign varies = product.price_varies
+  else
+    assign money_price = price | default: 0
+    assign money_compare = 0
+    assign varies = false
+  endif
+
+  assign on_sale = false
+  if money_compare > money_price
+    assign on_sale = true
+  endif
+-%}
+<span class="price {% if on_sale %}price--on-sale{% endif %}">
+  {%- if varies -%}
+    <span class="price__regular">{{ 'products.product.from_price_html' | t: price: money_price | money }}</span>
+  {%- else -%}
+    <span class="price__regular">{{ money_price | money }}</span>
+    {%- if on_sale -%}<s class="price__compare">{{ money_compare | money }}</s>{%- endif -%}
+  {%- endif -%}
+</span>

@@ -1,0 +1,34 @@
+{
+  "settings_schema": {
+    "colors": { "name": "Colors", "background": "Page background", "card": "Card background", "text": "Text", "accent": "Accent (EcomDZ yellow)", "accent_contrast": "Text on accent" },
+    "typography": { "name": "Typography", "heading_font": "Heading font", "body_font": "Body font" },
+    "layout": { "name": "Layout", "page_width": "Page width", "corner_radius": "Corner radius" },
+    "brand": { "name": "Brand", "logo": "Logo", "logo_width": "Logo width", "favicon": "Favicon" },
+    "social": { "name": "Social & contact", "phone": "Phone", "whatsapp": "WhatsApp (international format)" },
+    "product_card": { "name": "Product cards", "show_vendor": "Show vendor", "show_rating": "Show rating", "image_ratio": "Image ratio" },
+    "cart": { "name": "Cart", "type": "Cart type", "show_note": "Allow order note" }
+  },
+  "sections": {
+    "all": {
+      "padding": { "section_padding_heading": "Section padding", "padding_top": "Top padding", "padding_bottom": "Bottom padding" },
+      "colors": { "label": "Color scheme" },
+      "heading": "Heading",
+      "content": "Content",
+      "image": "Image",
+      "link": "Link",
+      "link_label": "Button label"
+    },
+    "header": { "name": "Header", "menu": "Menu", "sticky": "Sticky header on scroll" },
+    "footer": { "name": "Footer", "show_social": "Show social icons", "payment_text": "Reassurance text" },
+    "announcement": { "name": "Announcement bar", "text": "Text" },
+    "hero": { "name": "Hero banner", "subheading": "Subheading", "desktop_image": "Desktop image", "mobile_image": "Mobile image", "overlay": "Overlay opacity" },
+    "category_grid": { "name": "Category grid", "collection": "Collection" },
+    "marquee": { "name": "Scrolling marquee", "text": "Repeated text", "speed": "Speed" },
+    "featured_collection": { "name": "Featured collection", "products_to_show": "Products to show" },
+    "rich_text": { "name": "Rich text" },
+    "image_with_text": { "name": "Image with text", "layout": "Image position" },
+    "newsletter": { "name": "Newsletter" },
+    "main_product": { "name": "Product page", "show_highlights": "Show highlights (metafield)" },
+    "collection_list": { "name": "Collection list" }
+  }
+}

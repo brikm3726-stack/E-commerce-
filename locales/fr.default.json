@@ -1,0 +1,76 @@
+{
+  "accessibility": {
+    "skip_to_content": "Aller au contenu",
+    "refresh_page": "Choisir une option recharge la page.",
+    "close": "Fermer",
+    "menu": "Menu",
+    "cart": "Panier"
+  },
+  "general": {
+    "meta": {
+      "tags": "Étiquetées « {{ tags }} »",
+      "page": "Page {{ page }}"
+    },
+    "search": {
+      "search": "Rechercher",
+      "placeholder": "Rechercher un produit",
+      "results_with_count": "{{ count }} résultat pour « {{ terms }} »",
+      "results_with_count_plural": "{{ count }} résultats pour « {{ terms }} »",
+      "no_results": "Aucun résultat pour « {{ terms }} »."
+    },
+    "pagination": { "previous": "Précédent", "next": "Suivant" },
+    "newsletter_form": {
+      "email_placeholder": "Votre e-mail",
+      "confirmation": "Merci de votre inscription !",
+      "button_label": "S'inscrire"
+    },
+    "404": {
+      "title": "Page introuvable",
+      "subtext": "La page que vous cherchez n'existe pas.",
+      "link": "Retour à la boutique"
+    }
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Acheter maintenant",
+      "sold_out": "Épuisé",
+      "unavailable": "Indisponible",
+      "on_sale": "Promo",
+      "from_price_html": "À partir de {{ price }}",
+      "regular_price": "Prix normal",
+      "sale_price": "Prix promo",
+      "quantity": "Quantité",
+      "save_html": "-{{ percent }} %",
+      "vendor": "Marque",
+      "description": "Description",
+      "choose_options": "Choisir les options"
+    },
+    "facets": {
+      "sort_by_label": "Trier par",
+      "filter_button": "Filtrer",
+      "clear_all": "Tout effacer",
+      "product_count": "{{ count }} produit",
+      "product_count_plural": "{{ count }} produits"
+    }
+  },
+  "sections": {
+    "header": { "announcement": "Livraison partout en Algérie — Paiement à la livraison" },
+    "cart": {
+      "title": "Votre panier",
+      "empty": "Votre panier est vide",
+      "continue_shopping": "Continuer mes achats",
+      "subtotal": "Sous-total",
+      "checkout": "Commander",
+      "note": "Note de commande",
+      "remove": "Retirer",
+      "taxes_and_shipping_at_checkout": "Frais de livraison calculés à la commande."
+    },
+    "featured_collection": { "view_all": "Voir tout" }
+  },
+  "customer": {
+    "login_page": { "title": "Connexion", "email": "E-mail", "password": "Mot de passe", "sign_in": "Se connecter", "create_account": "Créer un compte" },
+    "register": { "title": "Créer un compte", "submit": "Créer" },
+    "account": { "title": "Mon compte", "logout": "Se déconnecter", "orders": "Commandes" }
+  },
+  "blogs": { "article": { "read_more": "Lire la suite", "back_to_blog": "Retour au blog" } }
+}

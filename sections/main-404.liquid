@@ -1,0 +1,10 @@
+<section class="section page-width" style="text-align:center;min-height:50vh;display:grid;place-content:center">
+  <p class="eyebrow">404</p>
+  <h1>{{ 'general.404.title' | t }}</h1>
+  <p style="color:var(--color-fg-2);margin:1rem 0 1.5rem">{{ 'general.404.subtext' | t }}</p>
+  <p><a href="{{ routes.root_url }}" class="button">{{ 'general.404.link' | t }}</a></p>
+</section>
+
+{% schema %}
+{ "name": "404", "settings": [] }
+{% endschema %}

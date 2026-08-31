@@ -1,0 +1,21 @@
+<section class="section page-width">
+  <h1>Commande {{ order.name }}</h1>
+  <p style="color:var(--color-fg-2)">Passee le {{ order.created_at | date: '%d %B %Y' }} &middot; {{ order.financial_status_label }} &middot; {{ order.fulfillment_status_label }}</p>
+  <table style="width:100%;margin-top:1.5rem;border-collapse:collapse">
+    <thead><tr><th style="text-align:left">Produit</th><th>Qte</th><th style="text-align:right">Prix</th></tr></thead>
+    <tbody>
+      {%- for line in order.line_items -%}
+        <tr style="border-top:1px solid var(--color-line)">
+          <td>{{ line.title }}</td><td style="text-align:center">{{ line.quantity }}</td>
+          <td style="text-align:right">{{ line.final_line_price | money }}</td>
+        </tr>
+      {%- endfor -%}
+    </tbody>
+  </table>
+  <div style="text-align:right;margin-top:1rem">
+    <div>Sous-total : {{ order.line_items_subtotal_price | money }}</div>
+    <div>Livraison : {{ order.shipping_price | money }}</div>
+    <div style="font-weight:700;font-size:1.1rem">Total : {{ order.total_price | money }}</div>
+  </div>
+  <p style="margin-top:2rem"><a href="{{ routes.account_url }}" class="button button--ghost">Retour au compte</a></p>
+</section>

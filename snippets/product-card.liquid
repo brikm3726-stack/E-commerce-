@@ -1,0 +1,42 @@
+{%- comment -%}
+  Carte produit — portée de src/components/product/ProductCard.tsx
+  Paramètres : product (obligatoire), ratio
+{%- endcomment -%}
+{%- liquid
+  assign ratio = ratio | default: settings.card_image_ratio
+  assign discount = 0
+  if product.compare_at_price > product.price
+    assign discount = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round
+  endif
+-%}
+<article class="card reveal">
+  <a href="{{ product.url }}" class="card__media {% if ratio == 'square' %}card__media--square{% endif %}">
+    {%- if product.featured_media -%}
+      {{ product.featured_media | image_url: width: 800 | image_tag:
+         loading: 'lazy', widths: '300,400,600,800', sizes: '(min-width:750px) 25vw, 50vw',
+         alt: product.featured_media.alt | default: product.title | escape }}
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag: 'placeholder' }}
+    {%- endif -%}
+    <div class="card__badges">
+      {%- if product.available == false -%}
+        <span class="badge badge--danger">{{ 'products.product.sold_out' | t }}</span>
+      {%- elsif discount > 0 -%}
+        <span class="badge badge--danger">-{{ discount }}%</span>
+      {%- endif -%}
+      {%- if product.metafields.custom.badge != blank -%}
+        <span class="badge badge--accent">{{ product.metafields.custom.badge }}</span>
+      {%- endif -%}
+    </div>
+  </a>
+  <div class="card__body">
+    {%- if settings.card_show_vendor and product.vendor != blank -%}
+      <span class="card__vendor">{{ product.vendor }}</span>
+    {%- endif -%}
+    <a href="{{ product.url }}" class="card__title">{{ product.title }}</a>
+    {%- if settings.card_show_rating and product.metafields.reviews.rating.value != blank -%}
+      <span class="card__rating">★ {{ product.metafields.reviews.rating.value }}</span>
+    {%- endif -%}
+    {% render 'price', product: product %}
+  </div>
+</article>
