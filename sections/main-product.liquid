@@ -96,6 +96,9 @@
 
           {%- when 'text' -%}
             <div {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
+
+          {%- when '@app' -%}
+            <div {{ block.shopify_attributes }}>{% render block %}</div>
         {%- endcase -%}
       {%- endfor -%}
     </div>
@@ -115,7 +118,8 @@
     ] },
     { "type": "highlights", "name": "Points forts (metafield custom.highlights)", "limit": 1 },
     { "type": "description", "name": "Description", "limit": 1 },
-    { "type": "text", "name": "Texte libre", "settings": [{ "type": "richtext", "id": "text", "label": "t:sections.all.content" }] }
+    { "type": "text", "name": "Texte libre", "settings": [{ "type": "richtext", "id": "text", "label": "t:sections.all.content" }] },
+    { "type": "@app" }
   ],
   "settings": [],
   "default": {
