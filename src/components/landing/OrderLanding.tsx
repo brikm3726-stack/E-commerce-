@@ -17,6 +17,7 @@ import { SITE } from "@/data/site";
 import { noestRate } from "@/data/shipping-noest";
 import { isValidPhone, normalizePhone, orderReference } from "@/lib/format";
 import { notifyOrder, type NotifyResult } from "@/lib/notify";
+import { sendToHub } from "@/lib/hub";
 import type { Order, Product } from "@/lib/types";
 
 /**
@@ -222,12 +223,17 @@ export function OrderLanding({ products }: { products: Product[] }) {
     // L'e-mail part en arrière-plan : on n'attend PAS le réseau pour afficher
     // la confirmation. Faire patienter quelqu'un devant un écran figé, sur un
     // tunnel Facebook Ads, c'est la commande perdue.
-    void notifyOrder(
-      built,
-      offNetwork
-        ? `Page pub arabe — HORS RESEAU NOEST (${wilaya}), acheminement a organiser`
-        : "Page pub arabe",
-    ).then(setNotified);
+    const origine = offNetwork
+      ? `Page pub arabe — HORS RESEAU NOEST (${wilaya}), acheminement a organiser`
+      : "Page pub arabe";
+
+    void notifyOrder(built, origine).then(setNotified);
+
+    // La commande part AUSSI vers le hub central, qui l'enregistre en base et
+    // l'affiche dans le dashboard. Les deux envois sont indépendants et
+    // parallèles : si le hub est injoignable, l'e-mail arrive quand même, et
+    // inversement. Aucun des deux ne fait attendre le client.
+    void sendToHub(built, origine);
 
     // court délai, juste pour que le bouton montre son état de chargement
     await new Promise((r) => setTimeout(r, 500));

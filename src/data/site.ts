@@ -53,3 +53,44 @@ export const NAV_LINKS = [
   { label: "Promotions", href: "/#promotions" },
   { label: "À propos", href: "/a-propos" },
 ] as const;
+
+/* ==========================================================================
+   Hub central (dossier ecom-hub)
+   ==========================================================================
+   Le site est statique : il n'a pas de base de données. Le hub, lui, en a une.
+   Chaque commande y est postée en plus de l'e-mail Web3Forms, et devient
+   consultable dans le dashboard, rattachée à son produit et à sa landing page.
+
+   Tant que HUB_URL est vide, RIEN NE CHANGE : le site se comporte exactement
+   comme avant, les commandes partent uniquement par e-mail. C'est voulu —
+   brancher le hub doit être une décision, pas un effet de bord.
+
+   Pour l'activer :
+     1. déploie ecom-hub (Vercel) et colle son adresse dans HUB_URL ;
+     2. dans le dashboard, crée les produits et les landing pages ;
+     3. reporte ici les identifiants qu'il te donne.
+   ========================================================================== */
+
+/** Adresse du hub, SANS barre oblique finale. Vide = désactivé. */
+export const HUB_URL = "https://ecom-hub-cyan.vercel.app";
+
+/** Identifiant de la page publicitaire arabe (/offre) dans le hub. */
+export const HUB_LANDING_ID = "LANDING_001";
+
+/** Identifiant du tunnel de commande du site (/commande) dans le hub.
+ *  Une landing différente : c'est ce qui permet de comparer ce que rapporte
+ *  la publicité et ce que rapporte le site. */
+export const HUB_LANDING_ID_SITE = "LANDING_002";
+
+/**
+ * Correspondance entre les produits du site et ceux du hub.
+ * Clé = slug (ou id) du produit ici, valeur = code du produit dans le hub.
+ *
+ * Si un slug est absent, la commande utilise le produit associé à la landing
+ * page dans le dashboard — donc rien ne casse si l'on oublie une entrée.
+ */
+export const HUB_PRODUCT_MAP: Record<string, string> = {
+  "step-one-navy": "PROD_001",
+  "step-one-white": "PROD_002",
+  "step-one-black": "PROD_003",
+};

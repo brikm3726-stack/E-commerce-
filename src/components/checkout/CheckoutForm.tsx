@@ -9,8 +9,9 @@ import { useStore } from "@/context/StoreProvider";
 import { communesOf, WILAYAS } from "@/data/wilayas";
 import { formatPrice, isValidPhone, normalizePhone } from "@/lib/format";
 import { notifyOrder } from "@/lib/notify";
+import { sendToHub } from "@/lib/hub";
 import { PAYMENT_METHODS, submitOrder } from "@/lib/orders";
-import { SHIPPING } from "@/data/site";
+import { HUB_LANDING_ID_SITE, SHIPPING } from "@/data/site";
 import type { DeliveryMode, OrderCustomer, PaymentMethod } from "@/lib/types";
 
 type FormState = OrderCustomer;
@@ -91,6 +92,11 @@ export function CheckoutForm() {
       // L'e-mail part en arrière-plan : `keepalive` fait survivre la requête
       // au changement de page qui suit immédiatement.
       void notifyOrder(order, "Site");
+
+      // Et vers le hub central, qui l'enregistre en base. Landing distincte de
+      // celle de la publicité : c'est ce qui permet de comparer, dans le
+      // dashboard, ce que rapporte le site et ce que rapporte la campagne.
+      void sendToHub(order, "Site", HUB_LANDING_ID_SITE);
 
       saveOrder(order);
       clearCart();
