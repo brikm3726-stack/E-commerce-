@@ -28,7 +28,7 @@
       assign body_font = settings.type_body_font
       assign heading_font = settings.type_heading_font
     -%}
-    <style>
+    {% style %}
       {{ body_font | font_face: font_display: 'swap' }}
       {{ heading_font | font_face: font_display: 'swap' }}
 
@@ -45,7 +45,7 @@
         --page-width: {{ settings.page_width }}px;
         --radius: {{ settings.corner_radius }}px;
       }
-    </style>
+    {% endstyle %}
 
     {{ 'theme.css' | asset_url | stylesheet_tag }}
     <script src="{{ 'theme.js' | asset_url }}" defer></script>
