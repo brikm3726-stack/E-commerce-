@@ -76,6 +76,7 @@
     "image_with_text": { "name": "Image avec texte", "layout": "Position de l'image" },
     "newsletter": { "name": "Newsletter" },
     "main_product": { "name": "Fiche produit", "show_highlights": "Afficher les points forts (metafield)" },
+    "main_collection": { "name": "Page collection" },
     "collection_list": { "name": "Liste des collections" }
   }
 }

@@ -1,15 +1,18 @@
 {%- liquid
   assign s = section.settings
+  assign hero_alt = s.image.alt | default: shop.name | escape
 -%}
 <section class="hero {% if s.light_text == false %}hero--light{% endif %}" style="--hero-overlay: {{ s.overlay | divided_by: 100.0 }}">
   <div class="hero__media">
-    {%- if s.image_mobile != blank -%}
-      <picture>
-        <source media="(max-width: 749px)" srcset="{{ s.image_mobile | image_url: width: 900 }}">
-        <img src="{{ s.image | image_url: width: 2000 }}" alt="{{ s.image.alt | default: shop.name | escape }}" loading="eager" fetchpriority="high">
-      </picture>
-    {%- elsif s.image != blank -%}
-      <img src="{{ s.image | image_url: width: 2000 }}" alt="{{ s.image.alt | default: shop.name | escape }}" loading="eager" fetchpriority="high">
+    {%- if s.image != blank -%}
+      {%- if s.image_mobile != blank -%}
+        <picture>
+          <source media="(max-width: 749px)" srcset="{{ s.image_mobile | image_url: width: 900 }}">
+          {{ s.image | image_url: width: 2000 | image_tag: loading: 'eager', fetchpriority: 'high', alt: hero_alt }}
+        </picture>
+      {%- else -%}
+        {{ s.image | image_url: width: 2000 | image_tag: loading: 'eager', fetchpriority: 'high', alt: hero_alt }}
+      {%- endif -%}
     {%- else -%}
       {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder' }}
     {%- endif -%}

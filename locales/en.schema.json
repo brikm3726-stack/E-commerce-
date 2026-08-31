@@ -29,6 +29,7 @@
     "image_with_text": { "name": "Image with text", "layout": "Image position" },
     "newsletter": { "name": "Newsletter" },
     "main_product": { "name": "Product page", "show_highlights": "Show highlights (metafield)" },
+    "main_collection": { "name": "Collection page" },
     "collection_list": { "name": "Collection list" }
   }
 }

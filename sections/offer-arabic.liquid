@@ -18,11 +18,8 @@
   if v.compare_at_price > v.price
     assign discount = v.compare_at_price | minus: v.price | times: 100.0 | divided_by: v.compare_at_price | round
   endif
+  assign product_alt = product.title | escape
 -%}
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap">
 
 <section class="ar-offer" dir="rtl" lang="ar">
   <div class="ar-wrap">
@@ -35,14 +32,15 @@
       {%- comment -%} ---------- Visuel produit ---------- {%- endcomment -%}
       <div class="ar-media">
         {%- if product.featured_media -%}
-          {{ product.featured_media | image_url: width: 1000 | image_tag: loading: 'eager', fetchpriority: 'high', alt: product.title | escape, class: 'ar-media__main' }}
+          {{ product.featured_media | image_url: width: 1000 | image_tag: loading: 'eager', fetchpriority: 'high', alt: product_alt, class: 'ar-media__main' }}
         {%- else -%}
           {{ 'product-1' | placeholder_svg_tag: 'placeholder' }}
         {%- endif -%}
         {%- if product.media.size > 1 -%}
           <div class="ar-thumbs">
             {%- for media in product.media limit: 5 -%}
-              {{ media | image_url: width: 200 | image_tag: loading: 'lazy', alt: media.alt | escape }}
+              {%- assign thumb_alt = media.alt | default: product_alt -%}
+              {{ media | image_url: width: 200 | image_tag: loading: 'lazy', alt: thumb_alt }}
             {%- endfor -%}
           </div>
         {%- endif -%}
@@ -162,7 +160,7 @@
 </section>
 
 {% style %}
-  .ar-offer { direction: rtl; font-family: "Cairo", "Segoe UI", Tahoma, "Noto Sans Arabic", sans-serif; background: var(--color-bg); padding: 1.5rem 0 5rem; }
+  .ar-offer { direction: rtl; font-family: "Segoe UI", Tahoma, "Noto Sans Arabic", "Noto Naskh Arabic", "Geeza Pro", "Arabic Typesetting", sans-serif; background: var(--color-bg); padding: 1.5rem 0 5rem; }
   .ar-wrap { max-width: 1100px; margin-inline: auto; padding-inline: 1.25rem; }
   .ar-flash { background: var(--color-danger); color: #fff; text-align: center; font-weight: 700; padding: .6rem 1rem; border-radius: var(--radius-md); margin-bottom: 1.25rem; }
   .ar-grid { display: grid; gap: 2rem; grid-template-columns: 1fr; }
