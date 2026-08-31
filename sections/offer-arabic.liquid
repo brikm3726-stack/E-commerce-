@@ -26,6 +26,7 @@
   if hero == blank
     assign hero = product.featured_media
   endif
+  assign hero_fallback = 'offre-hero-step-one-' | append: s.hero_preset | append: '.webp' | asset_url
 
   assign discount = 0
   if v.compare_at_price > v.price
@@ -44,6 +45,8 @@
     <header class="ar-hero">
       {%- if hero != blank -%}
         {{ hero | image_url: width: 1200 | image_tag: loading: 'eager', fetchpriority: 'high', alt: product_alt, class: 'ar-hero__img' }}
+      {%- elsif s.hero_preset != 'none' -%}
+        <img src="{{ hero_fallback }}" alt="{{ product_alt }}" width="900" height="900" loading="eager" fetchpriority="high" class="ar-hero__img">
       {%- else -%}
         {{ 'product-1' | placeholder_svg_tag: 'placeholder ar-hero__img' }}
       {%- endif -%}
@@ -206,7 +209,15 @@
   "name": "Page commande arabe (COD)",
   "settings": [
     { "type": "header", "content": "Maquette (haut de page)" },
-    { "type": "image_picker", "id": "hero_image", "label": "Image maquette publicitaire", "info": "Ex. offre-hero-step-one-navy.webp. À défaut : l'image principale du produit." },
+    { "type": "select", "id": "hero_preset", "label": "Maquette fournie (si aucune image ci-dessous)", "default": "navy",
+      "options": [
+        { "value": "navy", "label": "Blanc / Marine" },
+        { "value": "white", "label": "Blanc intégral" },
+        { "value": "black", "label": "Noir / Semelle blanche" },
+        { "value": "none", "label": "Aucune (utiliser l'image produit)" }
+      ]
+    },
+    { "type": "image_picker", "id": "hero_image", "label": "Ou : ta propre image de maquette", "info": "Prioritaire sur le choix ci-dessus." },
     { "type": "text", "id": "badge_text", "label": "Bandeau promo (ar)", "default": "عرض خاص — الكمية محدودة" },
     { "type": "checkbox", "id": "painted_cta", "label": "Zone cliquable sur le bouton peint de la maquette", "default": true },
     { "type": "range", "id": "cta_x", "min": 0, "max": 90, "step": 1, "unit": "%", "label": "Bouton peint — position depuis la gauche", "default": 39 },
